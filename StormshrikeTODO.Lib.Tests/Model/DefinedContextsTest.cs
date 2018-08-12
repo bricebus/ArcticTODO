@@ -162,10 +162,66 @@ namespace StormshrikeTODO.Tests
             Assert.AreEqual("<No Description Available>", contexts.GetDescription("ID"));
         }
 
+        [TestMethod]
+        public void TestContainsIDTrue()
+        {
+            string id1;
+            string id2;
+            DefinedContexts dc = CreateTwo(out id1, out id2);
+
+            Assert.IsTrue(dc.ContainsID(id1));
+        }
+
+        [TestMethod]
+        public void TestContainsIDFalse()
+        {
+            string id;
+            DefinedContexts dc = CreateOne(out id);
+
+            Assert.IsFalse(dc.ContainsID("blah"));
+        }
+
+        [TestMethod]
+        public void TestContainsIDEmptyList()
+        {
+            DefinedContexts dc = new DefinedContexts();
+
+            Assert.IsFalse(dc.ContainsID("blah"));
+        }
+
+        [TestMethod]
+        public void TestContainsIDNull()
+        {
+            DefinedContexts dc = new DefinedContexts();
+
+            Assert.IsFalse(dc.ContainsID(null));
+        }
+
+        private static DefinedContexts CreateOne(out string id)
+        {
+            id = Guid.NewGuid().ToString();
+            Context context = new Context(id, "Home");
+            DefinedContexts dc = new DefinedContexts();
+            dc.Add(context);
+            return dc;
+        }
+
         private static DefinedContexts CreateTwo()
         {
             String id1 = Guid.NewGuid().ToString();
             String id2 = Guid.NewGuid().ToString();
+            Context context1 = new Context(id1, "Home1");
+            Context context2 = new Context(id2, "Home2");
+            DefinedContexts dc = new DefinedContexts();
+            dc.Add(context1);
+            dc.Add(context2);
+            return dc;
+        }
+
+        private static DefinedContexts CreateTwo(out string id1, out string id2)
+        {
+            id1 = Guid.NewGuid().ToString();
+            id2 = Guid.NewGuid().ToString();
             Context context1 = new Context(id1, "Home1");
             Context context2 = new Context(id2, "Home2");
             DefinedContexts dc = new DefinedContexts();

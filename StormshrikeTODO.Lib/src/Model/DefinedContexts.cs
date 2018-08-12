@@ -77,5 +77,14 @@ namespace StormshrikeTODO.Model
             var ctx = FindIdByID(id);
             return ctx?.ToString() != null ? ctx.ToString() : "<No Description Available>";
         }
+
+        public bool ContainsID(string id)
+        {
+            if (String.IsNullOrEmpty(id))
+            {
+                return false;
+            }
+            return _idKey.ContainsKey(id);
+        }
     }
 }

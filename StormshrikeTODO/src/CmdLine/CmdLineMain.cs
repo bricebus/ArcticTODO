@@ -19,6 +19,8 @@ namespace StormshrikeTODO.CmdLine
         private const string CHANGE_PRJ_NAME = "change-project-name:";
         private const string CHANGE_TASK_STATUS = "change-task-status:";
         private const string CHANGE_TASK_DETAILS = "change-task-details:";
+        private const string CHANGE_TASK_CONTEXT = "change-task-context:";
+        private const string REMOVE_TASK_CONTEXT = "remove-task-context";
         private const string NEW_CONTEXT = "new-context:";
         private const string REMOVE_CONTEXT = "remove-context:";
         private const string CHANGE_CONTEXT = "change-context:";
@@ -94,37 +96,65 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd.StartsWith(CHANGE_TASK_DETAILS))
                     {
-                        if (_openProject == null)
+                        string errmsg;
+                        if (!AreProjectAndTaskOpen(out errmsg))
                         {
-                            System.Console.Out.WriteLine("No open project");
-                            continue;
-                        }
-                        else if (_openTask == null)
-                        {
-                            System.Console.Out.WriteLine("No open task");
+                            System.Console.Out.WriteLine(errmsg);
                             continue;
                         }
     
                         String newDetails = inputCmd.Substring(CHANGE_TASK_DETAILS.Length).Trim();
                         if (String.IsNullOrEmpty(newDetails))
                         {
-                            System.Console.Out.WriteLine("New Deatsils are blank!");
+                            System.Console.Out.WriteLine("New Details are blank!");
                         }
                         else
                         {
                             _openTask.Details = newDetails;
                         }
                     }
-                    else if (inputCmd.StartsWith(CHANGE_TASK_STATUS))
+                    else if (inputCmd.StartsWith(CHANGE_TASK_CONTEXT))
                     {
-                        if (_openProject == null)
+                        string errmsg;
+                        if (!AreProjectAndTaskOpen(out errmsg))
                         {
-                            System.Console.Out.WriteLine("No open project");
+                            System.Console.Out.WriteLine(errmsg);
                             continue;
                         }
-                        else if (_openTask == null)
+    
+                        String newContextID = inputCmd.Substring(CHANGE_TASK_CONTEXT.Length).Trim();
+                        if (String.IsNullOrEmpty(newContextID))
                         {
-                            System.Console.Out.WriteLine("No open task");
+                            System.Console.Out.WriteLine("New ContextID is blank!");
+                        }
+
+                        if (!IsValidContext(newContextID))
+                        {
+                            System.Console.Out.WriteLine("Cannot find Context with ID: '" + newContextID + "'");
+                        }
+                        else
+                        {
+                            _openTask.ContextID = newContextID;
+                        }
+                    }
+                    else if (inputCmd.StartsWith(REMOVE_TASK_CONTEXT))
+                    {
+                        string errmsg;
+                        if (!AreProjectAndTaskOpen(out errmsg))
+                        {
+                            System.Console.Out.WriteLine(errmsg);
+                            continue;
+                        }
+
+                        _openTask.ContextID = "";
+
+                    }
+                    else if (inputCmd.StartsWith(CHANGE_TASK_STATUS))
+                    {
+                        string errmsg;
+                        if (!AreProjectAndTaskOpen(out errmsg))
+                        {
+                            System.Console.Out.WriteLine(errmsg);
                             continue;
                         }
     
@@ -424,7 +454,7 @@ namespace StormshrikeTODO.CmdLine
                     {
                         _session.LoadDefaultContexts();
                     }
-                    else if (inputCmd == "?")
+                    else if (inputCmd == "?" || inputCmd == "help")
                     {
                         ListCommands();
                     }
@@ -434,7 +464,7 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else
                     {
-                        System.Console.Out.WriteLine("Unknown Command! (Enter '?' to see valid commands)");
+                        System.Console.Out.WriteLine("Unknown Command! (Enter '?' or 'help' to see valid commands)");
                     }
                 }
                 catch (Exception e)
@@ -471,9 +501,11 @@ namespace StormshrikeTODO.CmdLine
             System.Console.Out.WriteLine(CHANGE_PRJ_NAME + "<name>");
             System.Console.Out.WriteLine(CHANGE_TASK_STATUS + "<status>");
             System.Console.Out.WriteLine(CHANGE_TASK_DETAILS + "<details>");
+            System.Console.Out.WriteLine(CHANGE_TASK_CONTEXT + " <ContextID>");
+            System.Console.Out.WriteLine(REMOVE_TASK_CONTEXT);
             System.Console.Out.WriteLine(NEW_CONTEXT + "<description>");
-            System.Console.Out.WriteLine(REMOVE_CONTEXT + "<ID>");
-            System.Console.Out.WriteLine(CHANGE_CONTEXT + "<ID>,<new description>");
+            System.Console.Out.WriteLine(REMOVE_CONTEXT + "<ContextID>");
+            System.Console.Out.WriteLine(CHANGE_CONTEXT + "<ContextID>,<new description>");
         }
 
         private void LoadProjects()
@@ -528,6 +560,29 @@ namespace StormshrikeTODO.CmdLine
         {
             System.Console.Out.WriteLine(prj.ToString());
             prj.GetTaskList().ToList().ForEach(t => System.Console.Out.WriteLine("   " + t.ToString()));
+        }
+
+        private bool IsValidContext(string contextID)
+        {
+            return _session.Contexts.ContainsID(contextID);
+        }
+
+        private bool AreProjectAndTaskOpen(out string errmsg)
+        {
+            errmsg = "";
+            if (_openProject == null)
+            {
+
+                errmsg = "No open project";
+
+                return false;
+            }
+            else if (_openTask == null)
+            {
+                errmsg = "No open task";
+                return false;
+            }
+            return true;
         }
     }
 }

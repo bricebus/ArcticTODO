@@ -16,14 +16,6 @@ namespace StormshrikeTODO.Model
             {
                 return _taskList;
             }
-            //set
-            //{
-            //    _taskList.Clear();
-            //    foreach (var item in value)
-            //    {
-            //        AddTask(item);
-            //    }
-            //}
         }
 
         public Guid UniqueID { get; set; }
