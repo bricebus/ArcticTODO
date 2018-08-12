@@ -39,7 +39,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\ContexTest.cs" />
+    <Compile Include="Model\ContextTest.cs" />
     <Compile Include="Model\DefaultContextGeneratorTest.cs" />
     <Compile Include="Model\ProjectTest.cs" />
     <Compile Include="Model\SessionTest.cs" />

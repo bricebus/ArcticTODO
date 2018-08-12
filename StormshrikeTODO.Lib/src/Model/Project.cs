@@ -100,7 +100,7 @@ namespace StormshrikeTODO.Model
                 throw new ArgumentException("Task is null", "Task");
             }
 
-            _taskList.Insert(pos, task);
+            _taskList.Insert(pos, Task.DeepClone(task));
         }
 
         public void InsertAfter(Guid taskID, Task task)
@@ -109,8 +109,6 @@ namespace StormshrikeTODO.Model
             {
                 throw new ArgumentException("Task is null!", "Task");
             }
-
-            var newTask = Task.DeepClone(task);
 
             Task current = null;
             int idx = 0;
@@ -129,7 +127,7 @@ namespace StormshrikeTODO.Model
                 throw new ArgumentException("Cannot find TaskID!", "TaskID");
             }
 
-            _taskList.Insert(idx + 1, newTask);
+            _taskList.Insert(idx + 1, Task.DeepClone(task));
         }
 
         public Task GetTask(Guid taskID)
