@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StormshrikeTODO.Model;
-
+                                                                                                    
 namespace StormshrikeTODO.Model
 {
     /// <summary>
@@ -37,8 +37,7 @@ namespace StormshrikeTODO.Model
         {
             if (_descrKey.ContainsKey(descr))
             {
-                var id = _descrKey[descr].ID;
-                return new Context(id, descr);
+                return _descrKey[descr];
             }
             else
             {
@@ -50,8 +49,7 @@ namespace StormshrikeTODO.Model
         {
             if (_idKey.ContainsKey(id))
             {
-                var descr = _idKey[id].ToString();
-                return new Context(id, descr);
+                return _idKey[id];
             }
             else
             {

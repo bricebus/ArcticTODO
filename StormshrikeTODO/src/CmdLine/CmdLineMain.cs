@@ -19,6 +19,9 @@ namespace StormshrikeTODO.CmdLine
         private const string CHANGE_PRJ_NAME = "change-project-name:";
         private const string CHANGE_TASK_STATUS = "change-task-status:";
         private const string CHANGE_TASK_DETAILS = "change-task-details:";
+        private const string NEW_CONTEXT = "new-context:";
+        private const string REMOVE_CONTEXT = "remove-context:";
+        private const string CHANGE_CONTEXT = "change-context:";
 
         private Project _openProject = null;
         private Task _openTask = null;
@@ -165,6 +168,99 @@ namespace StormshrikeTODO.CmdLine
                             System.Console.Out.WriteLine("No open project");
                         }
     
+                    }
+                    else if (inputCmd.StartsWith(NEW_CONTEXT))
+                    {
+                        String newContextDescr = inputCmd.Substring(NEW_CONTEXT.Length).Trim();
+                        try
+                        {
+                            if (String.IsNullOrEmpty(newContextDescr))
+                            {
+
+                                System.Console.Out.WriteLine("Context is blank");
+                            }
+                            else if (_session.Contexts.FindIdByDescr(newContextDescr) != null)
+                            {
+                                System.Console.Out.WriteLine("Context already exists: '" + newContextDescr + "'");
+                            }
+                            else
+                            {
+                                Context c = new Context(Guid.NewGuid().ToString(), newContextDescr);
+                                _session.Contexts.Add(c);
+                            }
+                        }
+                        catch
+                        {
+                            System.Console.Out.WriteLine("Error adding Context: '" + newContextDescr + "'");
+                        }
+                    }
+                    else if (inputCmd.StartsWith(REMOVE_CONTEXT))
+                    {
+                        String contextID = inputCmd.Substring(REMOVE_CONTEXT.Length).Trim();
+                        try
+                        {
+                            var context = _session.Contexts.FindIdByID(contextID);
+                            if (String.IsNullOrEmpty(contextID))
+                            {
+
+                                System.Console.Out.WriteLine("Context ID is blank");
+                            }
+                            else if (context == null)
+                            {
+                                System.Console.Out.WriteLine("Cannot find Context with ID: '" + contextID + "'");
+                            }
+                            else
+                            {
+                                String d = context.Description;
+                                _session.Contexts.Remove(contextID);
+                                System.Console.Out.WriteLine("Removed Context with ID: '" + contextID + "' Description:'" + d + "'");
+                            }
+                        }
+                        catch
+                        {
+                            System.Console.Out.WriteLine("Error removing Context: '" + contextID + "'");
+                        }
+                    }
+                    else if (inputCmd.StartsWith(CHANGE_CONTEXT))
+                    {
+                        String cmd = inputCmd.Substring(CHANGE_CONTEXT.Length).Trim();
+
+                        try
+                        {
+                            var split = cmd.Split(',');
+
+                            if (split.Length != 2)
+                            {
+                                System.Console.Out.WriteLine("Invalid command: '" + cmd + "'");
+                                continue;
+                            }
+
+                            var id = split[0];
+                            var newDescription = split[1];
+                            var context = _session.Contexts.FindIdByID(id);
+
+                            if (String.IsNullOrEmpty(id))
+                            {
+                                System.Console.Out.WriteLine("Context ID is blank");
+                                continue;
+                            }
+                            else if (String.IsNullOrEmpty(newDescription))
+                            {
+                                System.Console.Out.WriteLine("New description is blank");
+                                continue;
+                            }
+                            else if (context == null)
+                            {
+                                System.Console.Out.WriteLine("Cannot find Context with ID: '" + id + "'");
+                                continue;
+                            }
+
+                            context.Description = newDescription;
+                        }
+                        catch
+                        {
+                            System.Console.Out.WriteLine("Error changing Context: '" + cmd + "'");
+                        }
                     }
                     else if (inputCmd == "show-open-project")
                     {
@@ -375,6 +471,9 @@ namespace StormshrikeTODO.CmdLine
             System.Console.Out.WriteLine(CHANGE_PRJ_NAME + "<name>");
             System.Console.Out.WriteLine(CHANGE_TASK_STATUS + "<status>");
             System.Console.Out.WriteLine(CHANGE_TASK_DETAILS + "<details>");
+            System.Console.Out.WriteLine(NEW_CONTEXT + "<description>");
+            System.Console.Out.WriteLine(REMOVE_CONTEXT + "<ID>");
+            System.Console.Out.WriteLine(CHANGE_CONTEXT + "<ID>,<new description>");
         }
 
         private void LoadProjects()
