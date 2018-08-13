@@ -55,6 +55,11 @@ namespace StormshrikeTODO.Model
 
         public Guid UniqueID { get; set; }
 
+        /// <summary>
+        /// Used to sort the Tasks
+        /// </summary>
+        public int Order { get; set; }
+
         internal Task()
         {
 

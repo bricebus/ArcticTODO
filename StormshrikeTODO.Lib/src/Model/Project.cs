@@ -146,5 +146,18 @@ namespace StormshrikeTODO.Model
             }
             return GetTask(taskId);
         }
+
+        public void OrderTasks()
+        {
+            IEnumerable<Task> query = _taskList.OrderBy(task => task.Order);
+
+            var order = 1000;
+
+            foreach (Task t in query)
+            {
+                t.Order = order;
+                order += 1000;
+            }
+        }
     }
 }

@@ -294,5 +294,25 @@ namespace StormshrikeTODO.Tests
 
             Assert.IsNull(foundTask);
         }
+
+        [TestMethod]
+        public void TestTaskOrderer()
+        {
+            Project prj = new Project("Test Project");
+            Task task1 = new Task("A New Task");
+            task1.Order = 2;
+            Task task2 = new Task("Another New Task");
+            task1.Order = 1;
+            prj.AddTask(task1);
+            prj.AddTask(task2);
+
+            prj.OrderTasks();
+
+            Task foundTask1 = prj.GetTask(task1.UniqueID.ToString());
+            Task foundTask2 = prj.GetTask(task2.UniqueID.ToString());
+
+            Assert.AreEqual(2000, foundTask1.Order);
+            Assert.AreEqual(1000, foundTask2.Order);
+        }
     }
 }
