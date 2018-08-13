@@ -140,7 +140,7 @@ namespace StormshrikeTODO.Tests
             prj.AddTask(task1);
             prj.AddTask(task2);
 
-            prj.InsertAfter(1, task3);
+            prj.InsertTaskAfter(1, task3);
 
             Assert.AreEqual(3, prj.GetTaskList().Count);
             Assert.AreEqual(task1Id, prj.GetTaskList().ElementAt(0).UniqueID);
@@ -161,7 +161,7 @@ namespace StormshrikeTODO.Tests
             prj.AddTask(task1);
             prj.AddTask(task2);
 
-            prj.InsertAfter(task2Id, task3);
+            prj.InsertTaskAfter(task2Id, task3);
 
             Assert.AreEqual(3, prj.GetTaskList().Count);
             Assert.AreEqual(task1Id, prj.GetTaskList().ElementAt(0).UniqueID);
@@ -181,7 +181,7 @@ namespace StormshrikeTODO.Tests
             prj.AddTask(task1);
             prj.AddTask(task2);
 
-            prj.InsertAfter(0, task3);
+            prj.InsertTaskAfter(0, task3);
         }
 
         [TestMethod]
@@ -196,7 +196,7 @@ namespace StormshrikeTODO.Tests
             prj.AddTask(task1);
             prj.AddTask(task2);
 
-            prj.InsertAfter(44, task3);
+            prj.InsertTaskAfter(44, task3);
         }
 
         [TestMethod]
@@ -209,7 +209,7 @@ namespace StormshrikeTODO.Tests
             prj.AddTask(task1);
             prj.AddTask(task2);
 
-            prj.InsertAfter(1, null);
+            prj.InsertTaskAfter(1, null);
         }
 
         [TestMethod]
@@ -224,7 +224,7 @@ namespace StormshrikeTODO.Tests
             prj.AddTask(task1);
             prj.AddTask(task2);
 
-            prj.InsertAfter(Guid.NewGuid(), task3);
+            prj.InsertTaskAfter(Guid.NewGuid(), task3);
         }
 
         [TestMethod]
@@ -237,7 +237,7 @@ namespace StormshrikeTODO.Tests
             prj.AddTask(task1);
             prj.AddTask(task2);
 
-            prj.InsertAfter(Guid.NewGuid(), null);
+            prj.InsertTaskAfter(Guid.NewGuid(), null);
         }
 
         [TestMethod]

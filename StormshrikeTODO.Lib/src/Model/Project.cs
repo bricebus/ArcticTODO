@@ -24,7 +24,8 @@ namespace StormshrikeTODO.Model
 
         public DateTime? DueDate { get; set; }
 
-        internal Project()
+        // Needed to mock
+        public Project()
         {
 
         }
@@ -85,7 +86,7 @@ namespace StormshrikeTODO.Model
             return taskListToReturn;
         }
 
-        public void InsertAfter(int pos, Task task)
+        public void InsertTaskAfter(int pos, Task task)
         {
             if (pos <= 0)
             {
@@ -103,7 +104,7 @@ namespace StormshrikeTODO.Model
             _taskList.Insert(pos, Task.DeepClone(task));
         }
 
-        public void InsertAfter(Guid taskID, Task task)
+        public void InsertTaskAfter(Guid taskID, Task task)
         {
             if (task == null)
             {
@@ -147,7 +148,8 @@ namespace StormshrikeTODO.Model
             return GetTask(taskId);
         }
 
-        public void OrderTasks()
+        // Make OrderTasks() virtual so that Moq can verify that it is called in SessionTest.
+        public virtual void OrderTasks()
         {
             IEnumerable<Task> query = _taskList.OrderBy(task => task.Order);
 

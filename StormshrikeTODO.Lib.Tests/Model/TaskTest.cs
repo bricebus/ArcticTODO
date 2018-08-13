@@ -67,9 +67,10 @@ namespace StormshrikeTODO.Tests.Model
         {
             Task task = new Task("TestTask4", DateTime.Parse("6/15/2016"));
             task.ContextID = "1234";
+            task.Order = 5678;
             Assert.AreEqual("ID:{"
                    + task.UniqueID
-                   + "},Name:{TestTask4},DueDate:{6/15/2016},Details:{},Status:{NotStarted}," +
+                   + "},Order:{5678},Name:{TestTask4},DueDate:{6/15/2016},Details:{},Status:{NotStarted}," +
                    "ContextID:{1234},DateStarted:{},DateCompleted:{}",
                 task.ToString());
         }

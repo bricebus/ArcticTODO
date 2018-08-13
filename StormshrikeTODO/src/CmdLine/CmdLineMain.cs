@@ -322,7 +322,7 @@ namespace StormshrikeTODO.CmdLine
                     {
                         if (_openProject != null)
                         {
-                            _openProject.GetTaskList().ToList().ForEach(t => System.Console.Out.WriteLine(t.ToString()));
+                            _openProject.GetTaskList().OrderBy(t=>t.Order).ToList().ForEach(t => System.Console.Out.WriteLine(t.ToString()));
                         }
                         else
                         {
@@ -559,7 +559,7 @@ namespace StormshrikeTODO.CmdLine
         private void PrintProject(Project prj)
         {
             System.Console.Out.WriteLine(prj.ToString());
-            prj.GetTaskList().ToList().ForEach(t => System.Console.Out.WriteLine("   " + t.ToString()));
+            prj.GetTaskList().OrderBy(t=>t.Order).ToList().ForEach(t => System.Console.Out.WriteLine("   " + t.ToString()));
         }
 
         private bool IsValidContext(string contextID)
@@ -572,9 +572,7 @@ namespace StormshrikeTODO.CmdLine
             errmsg = "";
             if (_openProject == null)
             {
-
                 errmsg = "No open project";
-
                 return false;
             }
             else if (_openTask == null)

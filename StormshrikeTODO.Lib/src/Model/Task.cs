@@ -94,11 +94,11 @@ namespace StormshrikeTODO.Model
         public override String ToString()
         {
             return String.Format(
-                "ID:{{{0}}},Name:{{{1}}},DueDate:{{{2}}},Details:{{{3}}},Status:{{{4}}},ContextID:{{{5}}}" +
+                "ID:{{{0}}},Order:{{{8}}},Name:{{{1}}},DueDate:{{{2}}},Details:{{{3}}},Status:{{{4}}},ContextID:{{{5}}}" +
                 ",DateStarted:{{{6}}},DateCompleted:{{{7}}}",
                 this.UniqueID, this.Name, Utility.GetDateTimeString(this.DateDue), this.Details,
                 this.Status, this.ContextID, Utility.GetDateTimeString(this.DateStarted),
-                Utility.GetDateTimeString(this.DateCompleted));
+                Utility.GetDateTimeString(this.DateCompleted), this.Order);
         }
 
 

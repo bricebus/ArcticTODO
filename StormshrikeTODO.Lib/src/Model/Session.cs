@@ -40,12 +40,24 @@ namespace StormshrikeTODO.Model
         public void LoadProjects()
         {
             _projectList = _loadPersistence.LoadProjects();
+            SetTaskOrderIncrement();
         }
 
         public void Save()
         {
+            SetTaskOrderIncrement();
+
             _savePersistence.SaveProjects(_projectList);
             _savePersistence.SaveContexts(this.Contexts);
+        }
+
+        private void SetTaskOrderIncrement()
+        {
+            // Make sure each Task's Order property is set "correctly"
+            foreach (var prj in _projectList)
+            {
+                prj.OrderTasks();
+            }
         }
 
         public IEnumerable<Project> ListProjectsWithNoTasks()

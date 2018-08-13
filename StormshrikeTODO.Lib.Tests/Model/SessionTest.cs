@@ -30,6 +30,31 @@ namespace StormshrikeTODO.Tests
         }
 
         [TestMethod]
+        public void TestLoadProjectsWithTaskOrder()
+        {
+            var prj1Mock = new Mock<Project>();
+            var prj2Mock = new Mock<Project>();
+            var prjList = new Collection<Project>();
+            prjList.Add(prj1Mock.Object);
+            prjList.Add(prj2Mock.Object);
+
+            //Collection<Project> prjList = GetTestProjectList();
+            DefinedContexts dc = GetTestContexts();
+            Session session = LoadTestSession(prjList, dc);
+
+            Assert.IsTrue(session.Initialized);
+            Assert.AreEqual(prjList[0].UniqueID, session.ProjectEnumerable().ToList()[0].UniqueID);
+            Assert.AreEqual(prjList[1].UniqueID, session.ProjectEnumerable().ToList()[1].UniqueID);
+            Assert.AreEqual(2, session.Contexts.Count);
+
+            prj1Mock.Verify(m => m.OrderTasks());
+            prj2Mock.Verify(m => m.OrderTasks());
+
+            Assert.AreEqual(dc.FindIdByDescr("Home1").ID, session.Contexts.FindIdByDescr("Home1").ID);
+            Assert.AreEqual(dc.FindIdByDescr("Home2").ID, session.Contexts.FindIdByDescr("Home2").ID);
+        }
+
+        [TestMethod]
         public void TestSave()
         {
             Collection<Project> prjList = GetTestProjectList();
@@ -40,6 +65,26 @@ namespace StormshrikeTODO.Tests
             session.Save();
             persistenceMock.Verify(m => m.SaveProjects(prjList));
             persistenceMock.Verify(m => m.SaveContexts(dc));
+        }
+
+        [TestMethod]
+        public void TestSaveWithTaskOrder()
+        {
+            var prj1Mock = new Mock<Project>();
+            var prj2Mock = new Mock<Project>();
+            var prjList = new Collection<Project>();
+            prjList.Add(prj1Mock.Object);
+            prjList.Add(prj2Mock.Object);
+
+            DefinedContexts dc = GetTestContexts();
+            var persistenceMock = new Mock<IPersistence>();
+            Session session = LoadTestSession(prjList, dc, persistenceMock);
+
+            session.Save();
+            persistenceMock.Verify(m => m.SaveProjects(prjList));
+            persistenceMock.Verify(m => m.SaveContexts(dc));
+            prj1Mock.Verify(m => m.OrderTasks());
+            prj2Mock.Verify(m => m.OrderTasks());
         }
 
         [TestMethod]
