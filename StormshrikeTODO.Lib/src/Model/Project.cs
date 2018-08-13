@@ -75,7 +75,7 @@ namespace StormshrikeTODO.Model
             {
                 return null;
             }
-            return Task.DeepClone(_taskList.First());
+            return Task.DeepClone(_taskList.OrderBy(t => t.Order).First());
         }
 
         public Collection<Task> GetTaskList()
@@ -160,6 +160,28 @@ namespace StormshrikeTODO.Model
                 t.Order = order;
                 order += 1000;
             }
+        }
+
+        public void MoveTaskFirst(string taskIdStr)
+        {
+            var task = GetTask(taskIdStr);
+            if (task == null)
+            {
+                throw new ArgumentException("Cannot find TaskID!", "TaskID");
+            }
+            task.Order = 0;
+            OrderTasks();
+        }
+
+        public void MoveTaskLast(string taskIdStr)
+        {
+            var task = GetTask(taskIdStr);
+            if (task == null)
+            {
+                throw new ArgumentException("Cannot find TaskID!", "TaskID");
+            }
+            task.Order = Int32.MaxValue;
+            OrderTasks();
         }
     }
 }

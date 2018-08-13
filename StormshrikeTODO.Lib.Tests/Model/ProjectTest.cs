@@ -52,7 +52,9 @@ namespace StormshrikeTODO.Tests
         public void TestTaskOrdering()
         {
             Task task1 = new Task("A New Task");
+            task1.Order = 1000;
             Task task2 = new Task("Another New Task");
+            task2.Order = 2000;
             Project prj = new Project("Test Project");
             prj.AddTask(task2);
             prj.AddTask(task1);
@@ -60,7 +62,7 @@ namespace StormshrikeTODO.Tests
             Assert.IsTrue(prj.HasTasks);
             Assert.AreEqual(2, prj.TaskCount);
 
-            Assert.AreEqual(task2.Name, prj.GetNextTask().Name);
+            Assert.AreEqual(task1.Name, prj.GetNextTask().Name);
         }
 
         [TestMethod]
@@ -298,21 +300,129 @@ namespace StormshrikeTODO.Tests
         [TestMethod]
         public void TestTaskOrderer()
         {
-            Project prj = new Project("Test Project");
-            Task task1 = new Task("A New Task");
-            task1.Order = 2;
-            Task task2 = new Task("Another New Task");
-            task1.Order = 1;
-            prj.AddTask(task1);
-            prj.AddTask(task2);
+            var taskArray = SetUpTwoTasks();
+            Project prj = CreateTestProject(taskArray);
 
-            prj.OrderTasks();
-
-            Task foundTask1 = prj.GetTask(task1.UniqueID.ToString());
-            Task foundTask2 = prj.GetTask(task2.UniqueID.ToString());
+            Task foundTask1 = prj.GetTask(taskArray[0].UniqueID.ToString());
+            Task foundTask2 = prj.GetTask(taskArray[1].UniqueID.ToString());
 
             Assert.AreEqual(2000, foundTask1.Order);
             Assert.AreEqual(1000, foundTask2.Order);
+        }
+
+        [TestMethod]
+        public void TestMoveTaskFirst()
+        {
+            // t1.Order = 1000
+            // t2.Order = 2000
+            // t3.Order = 3000
+            var taskArray = SetUpThreeTasks();
+            Project prj = CreateTestProject(taskArray);
+
+
+            Task foundTask1 = prj.GetTask(taskArray[0].UniqueID.ToString());
+            Task foundTask2 = prj.GetTask(taskArray[1].UniqueID.ToString());
+            Task foundTask3 = prj.GetTask(taskArray[2].UniqueID.ToString());
+
+            Assert.AreEqual(1000, foundTask1.Order);
+            Assert.AreEqual(2000, foundTask2.Order);
+            Assert.AreEqual(3000, foundTask3.Order);
+
+
+            prj.MoveTaskFirst(foundTask2.UniqueID.ToString());
+
+            Assert.AreEqual(foundTask2.Name, prj.GetNextTask().Name);
+            Assert.AreEqual(2000, foundTask1.Order);
+            Assert.AreEqual(1000, foundTask2.Order);
+            Assert.AreEqual(3000, foundTask3.Order);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestMoveTaskFirstInvalidID()
+        {
+            var taskArray = SetUpThreeTasks();
+            Project prj = CreateTestProject(taskArray);
+
+            prj.MoveTaskFirst("blah");
+        }
+
+        [TestMethod]
+        public void TestMoveTaskLast()
+        {
+            // t1.Order = 1000
+            // t2.Order = 2000
+            // t3.Order = 3000
+            var taskArray = SetUpThreeTasks();
+            Project prj = CreateTestProject(taskArray);
+
+
+            Task foundTask1 = prj.GetTask(taskArray[0].UniqueID.ToString());
+            Task foundTask2 = prj.GetTask(taskArray[1].UniqueID.ToString());
+            Task foundTask3 = prj.GetTask(taskArray[2].UniqueID.ToString());
+
+            Assert.AreEqual(1000, foundTask1.Order);
+            Assert.AreEqual(2000, foundTask2.Order);
+            Assert.AreEqual(3000, foundTask3.Order);
+
+
+            prj.MoveTaskLast(foundTask2.UniqueID.ToString());
+
+            Assert.AreEqual(foundTask1.Name, prj.GetNextTask().Name);
+            Assert.AreEqual(1000, foundTask1.Order);
+            Assert.AreEqual(3000, foundTask2.Order);
+            Assert.AreEqual(2000, foundTask3.Order);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestMoveTaskLastInvalidID()
+        {
+            var taskArray = SetUpThreeTasks();
+            Project prj = CreateTestProject(taskArray);
+
+            prj.MoveTaskLast("blah");
+        }
+
+        private Task[] SetUpTwoTasks()
+        {
+            var taskArray = new Task[2];
+
+            taskArray[0] = new Task("A New Task");
+            taskArray[0].Order = 2;
+
+            taskArray[1] = new Task("Another New Task");
+            taskArray[1].Order = 1;
+
+            return taskArray;
+        }
+
+        private Task[] SetUpThreeTasks()
+        {
+            var taskArray = new Task[3];
+
+            taskArray[0] = new Task("A New Task");
+            taskArray[0].Order = 1;
+
+            taskArray[1] = new Task("Another New Task");
+            taskArray[1].Order = 2;
+
+            taskArray[2] = new Task("And ANOTHER New Task");
+            taskArray[2].Order = 3;
+
+            return taskArray;
+        }
+
+        private static Project CreateTestProject(Task[] taskArray)
+        {
+            Project prj = new Project("Test Project");
+            foreach (var task in taskArray)
+            {
+                prj.AddTask(task);
+            }
+
+            prj.OrderTasks();
+            return prj;
         }
     }
 }
