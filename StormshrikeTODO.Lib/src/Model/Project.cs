@@ -173,6 +173,29 @@ namespace StormshrikeTODO.Model
             OrderTasks();
         }
 
+        public void MoveTaskUp(string taskIdStr)
+        {
+            var task = GetTask(taskIdStr);
+            if (task == null)
+            {
+                throw new ArgumentException("Cannot find TaskID!", "TaskID");
+            }
+            task.Order -= 1500;
+            OrderTasks();
+        }
+
+        public void MoveTaskDown(string taskIdStr)
+        {
+            var task = GetTask(taskIdStr);
+            if (task == null)
+            {
+                throw new ArgumentException("Cannot find TaskID!", "TaskID");
+            }
+            task.Order += 1500;
+            OrderTasks();
+        }
+
+
         public void MoveTaskLast(string taskIdStr)
         {
             var task = GetTask(taskIdStr);

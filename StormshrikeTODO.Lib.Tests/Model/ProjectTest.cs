@@ -313,21 +313,9 @@ namespace StormshrikeTODO.Tests
         [TestMethod]
         public void TestMoveTaskFirst()
         {
-            // t1.Order = 1000
-            // t2.Order = 2000
-            // t3.Order = 3000
-            var taskArray = SetUpThreeTasks();
-            Project prj = CreateTestProject(taskArray);
-
-
-            Task foundTask1 = prj.GetTask(taskArray[0].UniqueID.ToString());
-            Task foundTask2 = prj.GetTask(taskArray[1].UniqueID.ToString());
-            Task foundTask3 = prj.GetTask(taskArray[2].UniqueID.ToString());
-
-            Assert.AreEqual(1000, foundTask1.Order);
-            Assert.AreEqual(2000, foundTask2.Order);
-            Assert.AreEqual(3000, foundTask3.Order);
-
+            Project prj;
+            Task foundTask1, foundTask2, foundTask3;
+            CreateThreeTasks(out prj, out foundTask1, out foundTask2, out foundTask3);
 
             prj.MoveTaskFirst(foundTask2.UniqueID.ToString());
 
@@ -350,21 +338,9 @@ namespace StormshrikeTODO.Tests
         [TestMethod]
         public void TestMoveTaskLast()
         {
-            // t1.Order = 1000
-            // t2.Order = 2000
-            // t3.Order = 3000
-            var taskArray = SetUpThreeTasks();
-            Project prj = CreateTestProject(taskArray);
-
-
-            Task foundTask1 = prj.GetTask(taskArray[0].UniqueID.ToString());
-            Task foundTask2 = prj.GetTask(taskArray[1].UniqueID.ToString());
-            Task foundTask3 = prj.GetTask(taskArray[2].UniqueID.ToString());
-
-            Assert.AreEqual(1000, foundTask1.Order);
-            Assert.AreEqual(2000, foundTask2.Order);
-            Assert.AreEqual(3000, foundTask3.Order);
-
+            Project prj;
+            Task foundTask1, foundTask2, foundTask3;
+            CreateThreeTasks(out prj, out foundTask1, out foundTask2, out foundTask3);
 
             prj.MoveTaskLast(foundTask2.UniqueID.ToString());
 
@@ -375,6 +351,88 @@ namespace StormshrikeTODO.Tests
         }
 
         [TestMethod]
+        public void TestMoveTaskUp()
+        {
+            Project prj;
+            Task foundTask1, foundTask2, foundTask3;
+            CreateThreeTasks(out prj, out foundTask1, out foundTask2, out foundTask3);
+
+            prj.MoveTaskUp(foundTask2.UniqueID.ToString());
+
+            Assert.AreEqual(foundTask2.Name, prj.GetNextTask().Name);
+            Assert.AreEqual(2000, foundTask1.Order);
+            Assert.AreEqual(1000, foundTask2.Order);
+            Assert.AreEqual(3000, foundTask3.Order);
+        }
+
+        [TestMethod]
+        public void TestMoveTaskUpAlreadyFirst()
+        {
+            Project prj;
+            Task foundTask1, foundTask2, foundTask3;
+            CreateThreeTasks(out prj, out foundTask1, out foundTask2, out foundTask3);
+
+            prj.MoveTaskUp(foundTask1.UniqueID.ToString());
+
+            Assert.AreEqual(foundTask1.Name, prj.GetNextTask().Name);
+            Assert.AreEqual(1000, foundTask1.Order);
+            Assert.AreEqual(2000, foundTask2.Order);
+            Assert.AreEqual(3000, foundTask3.Order);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestMoveTaskUpInvalidTaskID()
+        {
+            Project prj;
+            Task foundTask1, foundTask2, foundTask3;
+            CreateThreeTasks(out prj, out foundTask1, out foundTask2, out foundTask3);
+
+            prj.MoveTaskUp("blah");
+        }
+
+        [TestMethod]
+        public void TestMoveTaskDown()
+        {
+            Project prj;
+            Task foundTask1, foundTask2, foundTask3;
+            CreateThreeTasks(out prj, out foundTask1, out foundTask2, out foundTask3);
+
+            prj.MoveTaskDown(foundTask2.UniqueID.ToString());
+
+            Assert.AreEqual(foundTask1.Name, prj.GetNextTask().Name);
+            Assert.AreEqual(1000, foundTask1.Order);
+            Assert.AreEqual(3000, foundTask2.Order);
+            Assert.AreEqual(2000, foundTask3.Order);
+        }
+
+        [TestMethod]
+        public void TestMoveTaskDownAlreadyLast()
+        {
+            Project prj;
+            Task foundTask1, foundTask2, foundTask3;
+            CreateThreeTasks(out prj, out foundTask1, out foundTask2, out foundTask3);
+
+            prj.MoveTaskDown(foundTask3.UniqueID.ToString());
+
+            Assert.AreEqual(foundTask1.Name, prj.GetNextTask().Name);
+            Assert.AreEqual(1000, foundTask1.Order);
+            Assert.AreEqual(2000, foundTask2.Order);
+            Assert.AreEqual(3000, foundTask3.Order);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestMoveTaskDownInvalidTaskID()
+        {
+            Project prj;
+            Task foundTask1, foundTask2, foundTask3;
+            CreateThreeTasks(out prj, out foundTask1, out foundTask2, out foundTask3);
+
+            prj.MoveTaskDown("blah");
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestMoveTaskLastInvalidID()
         {
@@ -382,6 +440,22 @@ namespace StormshrikeTODO.Tests
             Project prj = CreateTestProject(taskArray);
 
             prj.MoveTaskLast("blah");
+        }
+
+        private void CreateThreeTasks(out Project prj, out Task foundTask1, out Task foundTask2, out Task foundTask3)
+        {
+            // t1.Order = 1000
+            // t2.Order = 2000
+            // t3.Order = 3000
+            var taskArray = SetUpThreeTasks();
+            prj = CreateTestProject(taskArray);
+
+            foundTask1 = prj.GetTask(taskArray[0].UniqueID.ToString());
+            foundTask2 = prj.GetTask(taskArray[1].UniqueID.ToString());
+            foundTask3 = prj.GetTask(taskArray[2].UniqueID.ToString());
+            Assert.AreEqual(1000, foundTask1.Order);
+            Assert.AreEqual(2000, foundTask2.Order);
+            Assert.AreEqual(3000, foundTask3.Order);
         }
 
         private Task[] SetUpTwoTasks()

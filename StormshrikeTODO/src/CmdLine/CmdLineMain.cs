@@ -11,19 +11,38 @@ namespace StormshrikeTODO.CmdLine
     {
         private Session _session = null;
 
+        private const string LOAD_CMD = "load";
+        private const string SAVE_CMD = "save";
+        private const string EXIT_CMD = "exit";
         private const string OPEN_PROJECT_CMD = "open-project:";
         private const string OPEN_TASK_CMD = "open-task:";
         private const string NEW_PROJECT_CMD = "new-project:";
         private const string NEW_TASK_CMD = "new-task:";
-        private const string CHANGE_PRJ_DUE_DATE = "change-project-due-date:";
-        private const string CHANGE_PRJ_NAME = "change-project-name:";
-        private const string CHANGE_TASK_STATUS = "change-task-status:";
-        private const string CHANGE_TASK_DETAILS = "change-task-details:";
-        private const string CHANGE_TASK_CONTEXT = "change-task-context:";
-        private const string REMOVE_TASK_CONTEXT = "remove-task-context";
-        private const string NEW_CONTEXT = "new-context:";
-        private const string REMOVE_CONTEXT = "remove-context:";
-        private const string CHANGE_CONTEXT = "change-context:";
+        private const string LOAD_DEFAULT_CONTEXTS_CMD = "load-default-contexts";
+        private const string LIST_ALL_CMD = "list-all";
+        private const string LIST_PROJECTS_CMD = "list-projects";
+        private const string LIST_CONTEXTS_CMD = "list-contexts";
+        private const string CHANGE_PRJ_DUE_DATE_CMD = "change-project-due-date:";
+        private const string CHANGE_PRJ_NAME_CMD = "change-project-name:";
+        private const string CHANGE_TASK_STATUS_CMD = "change-task-status:";
+        private const string CHANGE_TASK_DETAILS_CMD = "change-task-details:";
+        private const string CHANGE_TASK_CONTEXT_CMD = "change-task-context:";
+        private const string REMOVE_TASK_CONTEXT_CMD = "remove-task-context";
+        private const string NEW_CONTEXT_CMD = "new-context:";
+        private const string REMOVE_CONTEXT_CMD = "remove-context:";
+        private const string CHANGE_CONTEXT_CMD = "change-context:";
+        private const string SHOW_OPEN_TASK_CMD = "show-open-task";
+        private const string SHOW_OPEN_PROJECT_CMD = "show-open-project";
+        private const string LIST_NEXT_TASKS_CMD = "list-next-tasks";
+        private const string LIST_NO_TASKS_CMD = "list-no-tasks";
+        private const string LIST_TASKS_CMD = "list-tasks";
+        private const string CLEAR_OPEN_PROJECT_CMD = "clear-open-project";
+        private const string CLEAR_OPEN_TASK_CMD = "clear-open-task";
+        private const string DELETE_OPEN_PROJECT_CMD = "delete-open-project";
+        private const string MOVE_TASK_FIRST_CMD = "move-task-first";
+        private const string MOVE_TASK_LAST_CMD = "move-task-last";
+        private const string MOVE_TASK_UP_CMD = "move-task-up";
+        private const string MOVE_TASK_DOWN_CMD = "move-task-down";
 
         private Project _openProject = null;
         private Task _openTask = null;
@@ -76,7 +95,7 @@ namespace StormshrikeTODO.CmdLine
                             System.Console.Out.WriteLine("Project not found!");
                         }
                     }
-                    else if (inputCmd.StartsWith(CHANGE_PRJ_NAME))
+                    else if (inputCmd.StartsWith(CHANGE_PRJ_NAME_CMD))
                     {
                         if (_openProject == null)
                         {
@@ -84,7 +103,7 @@ namespace StormshrikeTODO.CmdLine
                             continue;
                         }
     
-                        String newName = inputCmd.Substring(CHANGE_PRJ_NAME.Length).Trim();
+                        String newName = inputCmd.Substring(CHANGE_PRJ_NAME_CMD.Length).Trim();
                         if (String.IsNullOrEmpty(newName))
                         {
                             System.Console.Out.WriteLine("New Name is blank!");
@@ -94,7 +113,7 @@ namespace StormshrikeTODO.CmdLine
                             _openProject.ProjectName = newName;
                         }
                     }
-                    else if (inputCmd.StartsWith(CHANGE_TASK_DETAILS))
+                    else if (inputCmd.StartsWith(CHANGE_TASK_DETAILS_CMD))
                     {
                         string errmsg;
                         if (!AreProjectAndTaskOpen(out errmsg))
@@ -103,7 +122,7 @@ namespace StormshrikeTODO.CmdLine
                             continue;
                         }
     
-                        String newDetails = inputCmd.Substring(CHANGE_TASK_DETAILS.Length).Trim();
+                        String newDetails = inputCmd.Substring(CHANGE_TASK_DETAILS_CMD.Length).Trim();
                         if (String.IsNullOrEmpty(newDetails))
                         {
                             System.Console.Out.WriteLine("New Details are blank!");
@@ -113,7 +132,7 @@ namespace StormshrikeTODO.CmdLine
                             _openTask.Details = newDetails;
                         }
                     }
-                    else if (inputCmd.StartsWith(CHANGE_TASK_CONTEXT))
+                    else if (inputCmd.StartsWith(CHANGE_TASK_CONTEXT_CMD))
                     {
                         string errmsg;
                         if (!AreProjectAndTaskOpen(out errmsg))
@@ -122,7 +141,7 @@ namespace StormshrikeTODO.CmdLine
                             continue;
                         }
     
-                        String newContextID = inputCmd.Substring(CHANGE_TASK_CONTEXT.Length).Trim();
+                        String newContextID = inputCmd.Substring(CHANGE_TASK_CONTEXT_CMD.Length).Trim();
                         if (String.IsNullOrEmpty(newContextID))
                         {
                             System.Console.Out.WriteLine("New ContextID is blank!");
@@ -137,7 +156,7 @@ namespace StormshrikeTODO.CmdLine
                             _openTask.ContextID = newContextID;
                         }
                     }
-                    else if (inputCmd.StartsWith(REMOVE_TASK_CONTEXT))
+                    else if (inputCmd.StartsWith(REMOVE_TASK_CONTEXT_CMD))
                     {
                         string errmsg;
                         if (!AreProjectAndTaskOpen(out errmsg))
@@ -149,7 +168,7 @@ namespace StormshrikeTODO.CmdLine
                         _openTask.ContextID = "";
 
                     }
-                    else if (inputCmd.StartsWith(CHANGE_TASK_STATUS))
+                    else if (inputCmd.StartsWith(CHANGE_TASK_STATUS_CMD))
                     {
                         string errmsg;
                         if (!AreProjectAndTaskOpen(out errmsg))
@@ -158,7 +177,7 @@ namespace StormshrikeTODO.CmdLine
                             continue;
                         }
     
-                        String statusStr = inputCmd.Substring(CHANGE_TASK_STATUS.Length);
+                        String statusStr = inputCmd.Substring(CHANGE_TASK_STATUS_CMD.Length);
                         try
                         {
                             _openTask.Status = (Task.StatusEnum) Enum.Parse(typeof(Task.StatusEnum), statusStr);
@@ -169,11 +188,55 @@ namespace StormshrikeTODO.CmdLine
                             System.Console.Out.WriteLine("Invalid Status: '" + statusStr + "'");
                         }
                     }
-                    else if (inputCmd.StartsWith(CHANGE_PRJ_DUE_DATE))
+                    else if (inputCmd.StartsWith(MOVE_TASK_FIRST_CMD))
+                    {
+                        string errmsg;
+                        if (!AreProjectAndTaskOpen(out errmsg))
+                        {
+                            System.Console.Out.WriteLine(errmsg);
+                            continue;
+                        }
+
+                        _openProject.MoveTaskFirst(_openTask.UniqueID.ToString());
+                    }
+                    else if (inputCmd.StartsWith(MOVE_TASK_LAST_CMD))
+                    {
+                        string errmsg;
+                        if (!AreProjectAndTaskOpen(out errmsg))
+                        {
+                            System.Console.Out.WriteLine(errmsg);
+                            continue;
+                        }
+
+                        _openProject.MoveTaskLast(_openTask.UniqueID.ToString());
+                    }
+                    else if (inputCmd.StartsWith(MOVE_TASK_DOWN_CMD))
+                    {
+                        string errmsg;
+                        if (!AreProjectAndTaskOpen(out errmsg))
+                        {
+                            System.Console.Out.WriteLine(errmsg);
+                            continue;
+                        }
+
+                        _openProject.MoveTaskDown(_openTask.UniqueID.ToString());
+                    }
+                    else if (inputCmd.StartsWith(MOVE_TASK_UP_CMD))
+                    {
+                        string errmsg;
+                        if (!AreProjectAndTaskOpen(out errmsg))
+                        {
+                            System.Console.Out.WriteLine(errmsg);
+                            continue;
+                        }
+
+                        _openProject.MoveTaskUp(_openTask.UniqueID.ToString());
+                    }
+                    else if (inputCmd.StartsWith(CHANGE_PRJ_DUE_DATE_CMD))
                     {
                         if (_openProject != null)
                         {
-                            String newDueDateStr = inputCmd.Substring(CHANGE_PRJ_DUE_DATE.Length);
+                            String newDueDateStr = inputCmd.Substring(CHANGE_PRJ_DUE_DATE_CMD.Length);
                             try
                             {
                                 DateTime? newDueDate = DateTime.Parse(newDueDateStr.Trim());
@@ -199,9 +262,9 @@ namespace StormshrikeTODO.CmdLine
                         }
     
                     }
-                    else if (inputCmd.StartsWith(NEW_CONTEXT))
+                    else if (inputCmd.StartsWith(NEW_CONTEXT_CMD))
                     {
-                        String newContextDescr = inputCmd.Substring(NEW_CONTEXT.Length).Trim();
+                        String newContextDescr = inputCmd.Substring(NEW_CONTEXT_CMD.Length).Trim();
                         try
                         {
                             if (String.IsNullOrEmpty(newContextDescr))
@@ -224,9 +287,9 @@ namespace StormshrikeTODO.CmdLine
                             System.Console.Out.WriteLine("Error adding Context: '" + newContextDescr + "'");
                         }
                     }
-                    else if (inputCmd.StartsWith(REMOVE_CONTEXT))
+                    else if (inputCmd.StartsWith(REMOVE_CONTEXT_CMD))
                     {
-                        String contextID = inputCmd.Substring(REMOVE_CONTEXT.Length).Trim();
+                        String contextID = inputCmd.Substring(REMOVE_CONTEXT_CMD.Length).Trim();
                         try
                         {
                             var context = _session.Contexts.FindIdByID(contextID);
@@ -251,9 +314,9 @@ namespace StormshrikeTODO.CmdLine
                             System.Console.Out.WriteLine("Error removing Context: '" + contextID + "'");
                         }
                     }
-                    else if (inputCmd.StartsWith(CHANGE_CONTEXT))
+                    else if (inputCmd.StartsWith(CHANGE_CONTEXT_CMD))
                     {
-                        String cmd = inputCmd.Substring(CHANGE_CONTEXT.Length).Trim();
+                        String cmd = inputCmd.Substring(CHANGE_CONTEXT_CMD.Length).Trim();
 
                         try
                         {
@@ -292,7 +355,7 @@ namespace StormshrikeTODO.CmdLine
                             System.Console.Out.WriteLine("Error changing Context: '" + cmd + "'");
                         }
                     }
-                    else if (inputCmd == "show-open-project")
+                    else if (inputCmd == SHOW_OPEN_PROJECT_CMD)
                     {
                         if (_openProject != null)
                         {
@@ -303,7 +366,7 @@ namespace StormshrikeTODO.CmdLine
                             System.Console.Out.WriteLine("No open project");
                         }
                     }
-                    else if (inputCmd == "show-open-task")
+                    else if (inputCmd == SHOW_OPEN_TASK_CMD)
                     {
                         if (_openProject == null)
                         {
@@ -318,7 +381,7 @@ namespace StormshrikeTODO.CmdLine
                             System.Console.Out.WriteLine(_openTask.ToString());
                         }
                     }
-                    else if (inputCmd == "list-tasks")
+                    else if (inputCmd == LIST_TASKS_CMD)
                     {
                         if (_openProject != null)
                         {
@@ -347,24 +410,24 @@ namespace StormshrikeTODO.CmdLine
                             System.Console.Out.WriteLine("No open project");
                         }
                     }
-                    else if (inputCmd == "list-contexts")
+                    else if (inputCmd == LIST_CONTEXTS_CMD)
                     {
                         ListContexts();
                     }
-                    else if (inputCmd == "list-projects")
+                    else if (inputCmd == LIST_PROJECTS_CMD)
                     {
                         ListProjects();
                     }
-                    else if (inputCmd == "list-all")
+                    else if (inputCmd == LIST_ALL_CMD)
                     {
                         ListProjects();
                         ListContexts();
                     }
-                    else if (inputCmd == "load")
+                    else if (inputCmd == LOAD_CMD)
                     {
                         Load();
                     }
-                    else if (inputCmd == "save")
+                    else if (inputCmd == SAVE_CMD)
                     {
                         _session.Save();
                         System.Console.Out.WriteLine(_session.ProjectCount.ToString() + " projects saved");
@@ -410,7 +473,7 @@ namespace StormshrikeTODO.CmdLine
                         }
                         
                     }
-                    else if (inputCmd == "delete-open-project")
+                    else if (inputCmd == DELETE_OPEN_PROJECT_CMD)
                     {
                         if (_openProject == null)
                         {
@@ -423,23 +486,23 @@ namespace StormshrikeTODO.CmdLine
                             _openTask = null;
                         }
                     }
-                    else if (inputCmd == "clear-open-project")
+                    else if (inputCmd == CLEAR_OPEN_PROJECT_CMD)
                     {
                         _openProject = null;
                         _openTask = null;
                     }
-                    else if (inputCmd == "clear-open-task")
+                    else if (inputCmd == CLEAR_OPEN_TASK_CMD)
                     {
                         _openTask = null;
                     }
-                    else if (inputCmd == "list-next-tasks")
+                    else if (inputCmd == LIST_NEXT_TASKS_CMD)
                     {
                         foreach (var prj in _session.ProjectEnumerable())
                         {
                            ListNextTask(prj);
                         }
                     }
-                    else if (inputCmd == "list-no-tasks")
+                    else if (inputCmd == LIST_NO_TASKS_CMD)
                     {
                         var prjResults = _session.ListProjectsWithNoTasks();
                         if (prjResults != null)
@@ -450,7 +513,7 @@ namespace StormshrikeTODO.CmdLine
                             }
                         }
                     }
-                    else if (inputCmd == "load-default-contexts")
+                    else if (inputCmd == LOAD_DEFAULT_CONTEXTS_CMD)
                     {
                         _session.LoadDefaultContexts();
                     }
@@ -458,7 +521,7 @@ namespace StormshrikeTODO.CmdLine
                     {
                         ListCommands();
                     }
-                    else if (inputCmd == "exit")
+                    else if (inputCmd == EXIT_CMD)
                     {
                         return 0;
                     }
@@ -478,34 +541,34 @@ namespace StormshrikeTODO.CmdLine
 
         private static void ListCommands()
         {
-            System.Console.Out.WriteLine("load");
-            System.Console.Out.WriteLine("save");
-            System.Console.Out.WriteLine("exit");
-            System.Console.Out.WriteLine("load-default-contexts");
-            System.Console.Out.WriteLine("list-all");
-            System.Console.Out.WriteLine("list-projects");
-            System.Console.Out.WriteLine("list-contexts");
+            System.Console.Out.WriteLine(LOAD_CMD);
+            System.Console.Out.WriteLine(SAVE_CMD);
+            System.Console.Out.WriteLine(EXIT_CMD);
+            System.Console.Out.WriteLine(LOAD_DEFAULT_CONTEXTS_CMD);
+            System.Console.Out.WriteLine(LIST_ALL_CMD);
+            System.Console.Out.WriteLine(LIST_PROJECTS_CMD);
+            System.Console.Out.WriteLine(LIST_CONTEXTS_CMD);
             System.Console.Out.WriteLine(OPEN_PROJECT_CMD + "<ID>");
             System.Console.Out.WriteLine(OPEN_TASK_CMD + "<ID>");
-            System.Console.Out.WriteLine("show-open-task");
-            System.Console.Out.WriteLine("show-open-project");
-            System.Console.Out.WriteLine("list-next-tasks");
-            System.Console.Out.WriteLine("list-no-tasks");
-            System.Console.Out.WriteLine("list-tasks");
-            System.Console.Out.WriteLine("clear-open-project");
-            System.Console.Out.WriteLine("clear-open-task");
+            System.Console.Out.WriteLine(SHOW_OPEN_TASK_CMD);
+            System.Console.Out.WriteLine(SHOW_OPEN_PROJECT_CMD);
+            System.Console.Out.WriteLine(LIST_NEXT_TASKS_CMD);
+            System.Console.Out.WriteLine(LIST_NO_TASKS_CMD);
+            System.Console.Out.WriteLine(LIST_TASKS_CMD);
+            System.Console.Out.WriteLine(CLEAR_OPEN_PROJECT_CMD);
+            System.Console.Out.WriteLine(CLEAR_OPEN_TASK_CMD);
             System.Console.Out.WriteLine(NEW_PROJECT_CMD + "<name>[,<due date>]");
             System.Console.Out.WriteLine(NEW_TASK_CMD + "<name>[,<due date>[,detail]]");
-            System.Console.Out.WriteLine("delete-open-project");
-            System.Console.Out.WriteLine(CHANGE_PRJ_DUE_DATE + "<due date>");
-            System.Console.Out.WriteLine(CHANGE_PRJ_NAME + "<name>");
-            System.Console.Out.WriteLine(CHANGE_TASK_STATUS + "<status>");
-            System.Console.Out.WriteLine(CHANGE_TASK_DETAILS + "<details>");
-            System.Console.Out.WriteLine(CHANGE_TASK_CONTEXT + " <ContextID>");
-            System.Console.Out.WriteLine(REMOVE_TASK_CONTEXT);
-            System.Console.Out.WriteLine(NEW_CONTEXT + "<description>");
-            System.Console.Out.WriteLine(REMOVE_CONTEXT + "<ContextID>");
-            System.Console.Out.WriteLine(CHANGE_CONTEXT + "<ContextID>,<new description>");
+            System.Console.Out.WriteLine(DELETE_OPEN_PROJECT_CMD);
+            System.Console.Out.WriteLine(CHANGE_PRJ_DUE_DATE_CMD + "<due date>");
+            System.Console.Out.WriteLine(CHANGE_PRJ_NAME_CMD + "<name>");
+            System.Console.Out.WriteLine(CHANGE_TASK_STATUS_CMD + "<status>");
+            System.Console.Out.WriteLine(CHANGE_TASK_DETAILS_CMD + "<details>");
+            System.Console.Out.WriteLine(CHANGE_TASK_CONTEXT_CMD + " <ContextID>");
+            System.Console.Out.WriteLine(REMOVE_TASK_CONTEXT_CMD);
+            System.Console.Out.WriteLine(NEW_CONTEXT_CMD + "<description>");
+            System.Console.Out.WriteLine(REMOVE_CONTEXT_CMD + "<ContextID>");
+            System.Console.Out.WriteLine(CHANGE_CONTEXT_CMD + "<ContextID>,<new description>");
         }
 
         private void LoadProjects()
