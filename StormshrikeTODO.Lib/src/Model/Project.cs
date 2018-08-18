@@ -44,7 +44,7 @@ namespace StormshrikeTODO.Model
 
         public void AddTask(Task task)
         {
-            _taskList.Add(Task.DeepClone(task));
+            _taskList.Add(task);
         }
 
         public bool HasTasks
@@ -75,13 +75,13 @@ namespace StormshrikeTODO.Model
             {
                 return null;
             }
-            return Task.DeepClone(_taskList.OrderBy(t => t.Order).First());
+            return _taskList.OrderBy(t => t.Order).First();
         }
 
         public Collection<Task> GetTaskList()
         {
             Collection<Task> taskListToReturn = new Collection<Task>();
-            _taskList.ToList().ForEach(t => taskListToReturn.Add(Task.DeepClone(t)));
+            _taskList.ToList().ForEach(t => taskListToReturn.Add(t));
 
             return taskListToReturn;
         }
@@ -101,7 +101,7 @@ namespace StormshrikeTODO.Model
                 throw new ArgumentException("Task is null", "Task");
             }
 
-            _taskList.Insert(pos, Task.DeepClone(task));
+            _taskList.Insert(pos, task);
         }
 
         public void InsertTaskAfter(Guid taskID, Task task)
@@ -128,7 +128,7 @@ namespace StormshrikeTODO.Model
                 throw new ArgumentException("Cannot find TaskID!", "TaskID");
             }
 
-            _taskList.Insert(idx + 1, Task.DeepClone(task));
+            _taskList.Insert(idx + 1, task);
         }
 
         public Task GetTask(Guid taskID)

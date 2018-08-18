@@ -48,21 +48,6 @@ namespace StormshrikeTODO.Tests.Model
         }
 
         [TestMethod]
-        public void TestClone()
-        {
-            Task task = new Task("TestTask3", DateTime.Parse("1/15/2016"));
-            task.Details = "More details here!";
-            Task taskClone = Task.DeepClone(task);
-
-            Assert.AreNotEqual(task, taskClone);
-            Assert.AreEqual(task.Name, taskClone.Name);
-            Assert.AreEqual(task.UniqueID, taskClone.UniqueID);
-            Assert.AreEqual(task.DateDue, taskClone.DateDue);
-            Assert.AreEqual(task.Details, taskClone.Details);
-
-        }
-
-        [TestMethod]
         public void TestToString()
         {
             Task task = new Task("TestTask4", DateTime.Parse("6/15/2016"));

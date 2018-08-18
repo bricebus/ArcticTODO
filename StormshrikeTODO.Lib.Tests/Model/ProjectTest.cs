@@ -108,8 +108,8 @@ namespace StormshrikeTODO.Tests
             Task task2fromList = taskListFromProject.ElementAt(1);
             Assert.AreEqual("A New Task", task1fromList.Name);
             Assert.AreEqual("Another New Task", task2fromList.Name);
-            Assert.AreNotSame(task1, task1fromList);
-            Assert.AreNotSame(task2, task2fromList);
+            Assert.AreSame(task1, task1fromList);
+            Assert.AreSame(task2, task2fromList);
         }
 
         [TestMethod]
