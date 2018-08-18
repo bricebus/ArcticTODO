@@ -385,7 +385,7 @@ namespace StormshrikeTODO.CmdLine
                     {
                         if (_openProject != null)
                         {
-                            _openProject.GetTaskList().OrderBy(t=>t.Order).ToList().ForEach(t => System.Console.Out.WriteLine(t.ToString()));
+                            _session.GetTaskList(_openProject.UniqueID).ForEach(t => System.Console.Out.WriteLine(t.ToString()));
                         }
                         else
                         {

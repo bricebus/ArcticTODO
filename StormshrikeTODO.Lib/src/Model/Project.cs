@@ -78,10 +78,17 @@ namespace StormshrikeTODO.Model
             return _taskList.OrderBy(t => t.Order).First();
         }
 
+        /// <summary>
+        /// Return a list of all Tasks for the project; default order
+        /// </summary>
+        /// <returns></returns>
         public Collection<Task> GetTaskList()
         {
             Collection<Task> taskListToReturn = new Collection<Task>();
-            _taskList.ToList().ForEach(t => taskListToReturn.Add(t));
+            foreach (var t in _taskList)
+            {
+               taskListToReturn.Add(t);
+            }
 
             return taskListToReturn;
         }

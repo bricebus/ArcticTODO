@@ -282,6 +282,31 @@ namespace StormshrikeTODO.Tests
 
         }
 
+        [TestMethod]
+        public void TestGetTaskList()
+        {
+            Collection<Project> prjList = GetTestProjectList();
+            Session session = LoadTestSession(prjList);
+            Project prj1 = prjList[0];
+            Task task = prj1.GetNextTask();
+            prj1.MoveTaskLast(task.UniqueID.ToString());
+            List<Task> taskList = session.GetTaskList(prjList[0].UniqueID);
+
+            Assert.AreEqual(3, taskList.Count);
+            Assert.AreEqual(1000, taskList[0].Order);
+            Assert.AreEqual(2000, taskList[1].Order);
+            Assert.AreEqual(3000, taskList[2].Order);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestGetTaskListInvalid()
+        {
+            Collection<Project> prjList = GetTestProjectList();
+            Session session = LoadTestSession(prjList);
+            List<Task> taskList = session.GetTaskList(new Guid());
+        }
+
         private DefinedContexts GetTestContexts()
         {
             String id1 = Guid.NewGuid().ToString();
@@ -301,6 +326,8 @@ namespace StormshrikeTODO.Tests
             var prj2 = new Project("Test Project2", DateTime.Parse("1/1/2018"));
             var task = new Task("Test Task 1.1", DateTime.Parse("7/1/2016"));
             prj1.AddTask(task);
+            prj1.AddTask(new Task("Test Task 1.2", DateTime.Parse("7/1/2018")));
+            prj1.AddTask(new Task("Test Task 1.3", DateTime.Parse("7/1/2017")));
             var prjList = new Collection<Project>();
             prjList.Add(prj1);
             prjList.Add(prj2);

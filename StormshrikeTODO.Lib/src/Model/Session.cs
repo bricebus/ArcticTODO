@@ -98,5 +98,15 @@ namespace StormshrikeTODO.Model
         {
             this.Contexts = new DefaultContextGenerator().GenerateDefaultContexts();
         }
+
+        public List<Task> GetTaskList(Guid prjID)
+        {
+            var prj = FindProjectByID(prjID.ToString());
+            if (prj == null)
+            {
+                throw new ArgumentException("Invalid ProjectID");
+            }
+            return prj.GetTaskList().OrderBy(t => t.Order).ToList();
+        }
     }
 }
