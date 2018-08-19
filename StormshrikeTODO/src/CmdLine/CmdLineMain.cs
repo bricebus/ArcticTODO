@@ -115,13 +115,12 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd.StartsWith(CHANGE_TASK_DETAILS_CMD))
                     {
-                        string errmsg;
-                        if (!AreProjectAndTaskOpen(out errmsg))
+                        if (!AreProjectAndTaskOpen(out string errmsg))
                         {
                             System.Console.Out.WriteLine(errmsg);
                             continue;
                         }
-    
+
                         String newDetails = inputCmd.Substring(CHANGE_TASK_DETAILS_CMD.Length).Trim();
                         if (String.IsNullOrEmpty(newDetails))
                         {
@@ -134,13 +133,12 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd.StartsWith(CHANGE_TASK_CONTEXT_CMD))
                     {
-                        string errmsg;
-                        if (!AreProjectAndTaskOpen(out errmsg))
+                        if (!AreProjectAndTaskOpen(out string errmsg))
                         {
                             System.Console.Out.WriteLine(errmsg);
                             continue;
                         }
-    
+
                         String newContextID = inputCmd.Substring(CHANGE_TASK_CONTEXT_CMD.Length).Trim();
                         if (String.IsNullOrEmpty(newContextID))
                         {
@@ -158,8 +156,7 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd.StartsWith(REMOVE_TASK_CONTEXT_CMD))
                     {
-                        string errmsg;
-                        if (!AreProjectAndTaskOpen(out errmsg))
+                        if (!AreProjectAndTaskOpen(out string errmsg))
                         {
                             System.Console.Out.WriteLine(errmsg);
                             continue;
@@ -170,13 +167,12 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd.StartsWith(CHANGE_TASK_STATUS_CMD))
                     {
-                        string errmsg;
-                        if (!AreProjectAndTaskOpen(out errmsg))
+                        if (!AreProjectAndTaskOpen(out string errmsg))
                         {
                             System.Console.Out.WriteLine(errmsg);
                             continue;
                         }
-    
+
                         String statusStr = inputCmd.Substring(CHANGE_TASK_STATUS_CMD.Length);
                         try
                         {
@@ -190,8 +186,7 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd.StartsWith(MOVE_TASK_FIRST_CMD))
                     {
-                        string errmsg;
-                        if (!AreProjectAndTaskOpen(out errmsg))
+                        if (!AreProjectAndTaskOpen(out string errmsg))
                         {
                             System.Console.Out.WriteLine(errmsg);
                             continue;
@@ -201,8 +196,7 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd.StartsWith(MOVE_TASK_LAST_CMD))
                     {
-                        string errmsg;
-                        if (!AreProjectAndTaskOpen(out errmsg))
+                        if (!AreProjectAndTaskOpen(out string errmsg))
                         {
                             System.Console.Out.WriteLine(errmsg);
                             continue;
@@ -212,8 +206,7 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd.StartsWith(MOVE_TASK_DOWN_CMD))
                     {
-                        string errmsg;
-                        if (!AreProjectAndTaskOpen(out errmsg))
+                        if (!AreProjectAndTaskOpen(out string errmsg))
                         {
                             System.Console.Out.WriteLine(errmsg);
                             continue;
@@ -223,8 +216,7 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd.StartsWith(MOVE_TASK_UP_CMD))
                     {
-                        string errmsg;
-                        if (!AreProjectAndTaskOpen(out errmsg))
+                        if (!AreProjectAndTaskOpen(out string errmsg))
                         {
                             System.Console.Out.WriteLine(errmsg);
                             continue;
