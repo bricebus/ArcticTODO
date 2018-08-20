@@ -1,3 +1,5 @@
+PRAGMA foreign_keys = ON;
+
 INSERT INTO Projects VALUES("aa790642-9113-4f4e-b0a3-9ac6da26ed76", "Test Project  1", DATE("2018-01-01"), strftime('%Y-%m-%d %H:%M:%f', "NOW"));
 INSERT INTO Projects VALUES("67345f2b-03af-409e-924c-678b4fc2e19d", "Test Project  2", DATE("2018-02-02"), strftime('%Y-%m-%d %H:%M:%f', "NOW"));
 INSERT INTO Projects VALUES("31fe6039-298b-4ec6-a2fc-ac2cbfcd5a5b", "Test Project  3", DATE("2018-03-03"), strftime('%Y-%m-%d %H:%M:%f', "NOW"));

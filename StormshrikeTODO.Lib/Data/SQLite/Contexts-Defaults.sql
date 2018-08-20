@@ -1,3 +1,5 @@
+PRAGMA foreign_keys = ON;
+
 INSERT INTO Contexts VALUES("2ad57821-dad5-4e0a-abb4-47d99b314f21", "Home");
 INSERT INTO Contexts VALUES("be17f3e2-764b-43b5-b943-63faf6223863", "Office");
 INSERT INTO Contexts VALUES("f89d513b-c24d-468e-99f3-b841e5ceca6f", "Computer");
