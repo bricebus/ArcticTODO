@@ -22,6 +22,11 @@ namespace StormshrikeTODO
             //var binconfig = new BinFilePersistenceConfig();
             //var session = new Session(new XmlFilePersistence(xmlconfig), new BinFilePersistence(binconfig));
 
+
+            //SQLitePersistence dbsqlite = new SQLitePersistence("C:\\Users\\bgb\\AppData\\Local\\Temp\\Stormshrike.db");
+            //dbsqlite.Open();
+
+
             return new CmdLineMain(session).Start(args);
         }
     }

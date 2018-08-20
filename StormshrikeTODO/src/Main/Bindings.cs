@@ -9,6 +9,7 @@ public class Bindings : NinjectModule
     {
         Bind<Session>().To<Session>();
         //Bind<IPersistence>().To<BinFilePersistence>();
-        Bind<IPersistence>().To<XmlFilePersistence>();
+        //Bind<IPersistence>().To<XmlFilePersistence>();
+        Bind<IPersistence>().To<SQLitePersistence>();
     }
 }
