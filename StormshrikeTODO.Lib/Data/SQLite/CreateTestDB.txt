@@ -1,0 +1,3 @@
+.read Projects.sql
+.read Project-testdata.sql
+.read Tasks.sql
