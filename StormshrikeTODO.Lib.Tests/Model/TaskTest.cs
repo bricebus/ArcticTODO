@@ -12,6 +12,8 @@ namespace StormshrikeTODO.Tests.Model
         {
             Task task = new Task("TestTask1");
 
+            DateTime dt1 = DateTime.Now;
+
             Assert.AreEqual("TestTask1", task.Name);
             Assert.IsFalse(task.DateDue.HasValue);
             Assert.IsFalse(task.DateStarted.HasValue);
@@ -19,6 +21,9 @@ namespace StormshrikeTODO.Tests.Model
             Assert.AreNotEqual("00000000-0000-0000-0000-000000000000", task.UniqueID.ToString());
             Assert.AreEqual(Task.StatusEnum.NotStarted, task.Status);
             Assert.AreEqual("", task.ContextID);
+            DateTime dt2 = DateTime.Now;
+            Assert.IsTrue(task.DateTimeCreated >= dt1);
+            Assert.IsTrue(task.DateTimeCreated <= dt2);
         }
 
         [TestMethod]

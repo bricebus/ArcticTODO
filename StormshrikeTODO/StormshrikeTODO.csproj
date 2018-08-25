@@ -66,8 +66,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Data\SQLite\CreateDB.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
-    <None Include="src\Persistence\SQLite\Data\CreateTestDB.ps1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StormshrikeTODO.Lib\StormshrikeTODO.Lib.csproj">
@@ -76,12 +78,18 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="src\Persistence\SQLite\Data\Contexts-Defaults.sql" />
-    <Content Include="src\Persistence\SQLite\Data\Contexts.sql" />
-    <Content Include="src\Persistence\SQLite\Data\Projects-testdata.sql" />
-    <Content Include="src\Persistence\SQLite\Data\Projects.sql" />
-    <Content Include="src\Persistence\SQLite\Data\Tasks-testdata.sql" />
-    <Content Include="src\Persistence\SQLite\Data\Tasks.sql" />
+    <Content Include="Data\SQLite\Contexts-Defaults.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\SQLite\Contexts.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\SQLite\Projects.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\SQLite\Tasks.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.109.1\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.109.1\build\net45\System.Data.SQLite.Core.targets')" />

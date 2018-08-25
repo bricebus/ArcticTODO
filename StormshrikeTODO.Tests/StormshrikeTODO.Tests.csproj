@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Persistence\BinFilePersistenceTest.cs" />
+    <Compile Include="src\Persistence\SQLItePersistenceTest.cs" />
     <Compile Include="src\Persistence\XmlPersistenceTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +76,11 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="src\Persistence\SQLite\Data\CreateTestDB.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="src\Persistence\SQLite\Data\Projects-testdata.sql" />
+    <Content Include="src\Persistence\SQLite\Data\Tasks-testdata.sql" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

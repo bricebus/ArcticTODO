@@ -59,6 +59,9 @@ namespace StormshrikeTODO.Model
         /// Used to sort the Tasks
         /// </summary>
         public int Order { get; set; }
+        public DateTime DateTimeCreated { get; set; }
+
+
 
         internal Task()
         {
@@ -72,6 +75,7 @@ namespace StormshrikeTODO.Model
             this.UniqueID = Guid.NewGuid();
             this.Status = StatusEnum.NotStarted;
             this.ContextID = "";
+            this.DateTimeCreated = DateTime.Now;
         }
 
         public Task(String name, DateTime? dueDate) : this(name)

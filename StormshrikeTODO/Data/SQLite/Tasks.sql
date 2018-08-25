@@ -5,6 +5,8 @@ CREATE TABLE Tasks (
    Name VARCHAR(100),
    Status VARCHAR(30),
    ProjectID VARCHAR(36),
+   TaskOrder INTEGER,
+   Details VARCHAR(200),
    DateStarted VARCHAR(30),
    DateTimeCompleted VARCHAR(30),
    DateDue VARCHAR(30),
