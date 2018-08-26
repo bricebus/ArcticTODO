@@ -76,11 +76,17 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="src\Persistence\SQLite\Data\CreateTestDB.ps1" />
+    <None Include="Data\SQLite\LoadTestDB.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="src\Persistence\SQLite\Data\Projects-testdata.sql" />
-    <Content Include="src\Persistence\SQLite\Data\Tasks-testdata.sql" />
+    <Content Include="Data\SQLite\Projects-testdata.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\SQLite\Tasks-testdata.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

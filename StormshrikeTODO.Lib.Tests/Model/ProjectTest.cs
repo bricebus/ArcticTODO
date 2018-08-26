@@ -10,6 +10,19 @@ namespace StormshrikeTODO.Tests
     public class ProjectTest
     {
         [TestMethod]
+        public void TestDateTimeCreated()
+        {
+
+            DateTime dt1 = DateTime.Now;
+
+            Project prj = new Project("TestProject1");
+
+            DateTime dt2 = DateTime.Now;
+            Assert.IsTrue(prj.DateTimeCreated >= dt1);
+            Assert.IsTrue(prj.DateTimeCreated <= dt2);
+        }
+
+        [TestMethod]
         public void TestProjectDueDate()
         {
             Project prj = new Project("Test Project", DateTime.Parse("1/1/2016"));

@@ -23,6 +23,7 @@ namespace StormshrikeTODO.Model
         public string ProjectName { get; set; }
 
         public DateTime? DueDate { get; set; }
+        public DateTime DateTimeCreated { get; set; }
 
         // Needed to mock
         public Project()
@@ -40,6 +41,7 @@ namespace StormshrikeTODO.Model
         {
             ProjectName = prjName;
             this.UniqueID = Guid.NewGuid();
+            this.DateTimeCreated = DateTime.Now;
         }
 
         public void AddTask(Task task)

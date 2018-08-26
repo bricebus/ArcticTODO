@@ -3,11 +3,13 @@ using StormshrikeTODO.Model;
 using StormshrikeTODO.Persistence;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Task = StormshrikeTODO.Model.Task;
 
 namespace StormshrikeTODO.Tests.Persistence
 {
@@ -70,7 +72,14 @@ namespace StormshrikeTODO.Tests.Persistence
         }
 
         [ClassInitialize]
-        public static void CreateTestDB(TestContext testContext)
+        public static void Initialize(TestContext testContext)
+        {
+            CreateTestDB();
+            LoadTestDataIntoDB();
+
+        }
+
+        private static void CreateTestDB()
         {
             string origCwd = System.IO.Directory.GetCurrentDirectory();
 
@@ -80,6 +89,14 @@ namespace StormshrikeTODO.Tests.Persistence
             Assert.IsTrue(System.IO.File.Exists(_testDbLocation), "Cannot find DB file!");
         }
 
+        private static void LoadTestDataIntoDB()
+        {
+            string origCwd = System.IO.Directory.GetCurrentDirectory();
+
+            System.IO.Directory.SetCurrentDirectory("Data\\SQLite");
+            RunPowershellScript("LoadTestDB.ps1", "-dblocation \"" + _testDbLocation + "\"");
+            System.IO.Directory.SetCurrentDirectory(origCwd);
+        }
 
         [ClassCleanup]
         public static void Cleanup()
@@ -101,6 +118,151 @@ namespace StormshrikeTODO.Tests.Persistence
                 Assert.AreEqual("c50d02de-d22c-475b-9fef-6e24c05f966b", dc.FindIdByDescr("Phone").ID);
             }
 
+        }
+
+        [TestMethod]
+        public void TestLoadProjects()
+        {
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                Collection<Project> prjList = sqlite.LoadProjects();
+                Assert.AreEqual(10, prjList.Count);
+                foreach (var prj in prjList)
+                {
+                   Assert.AreEqual(5, prj.TaskCount);
+                }
+
+                Project prj1 = prjList.First(p => p.ProjectName == "Test Project  1");
+                Task t1_1 = prj1.GetTask("49f184a0-d6bb-44b2-a6e4-cb49559d494e");
+                Task t1_2 = prj1.GetTask("d34c00e4-bdcb-42a5-88e9-4b8961a543f0");
+                Task t1_3 = prj1.GetTask("871ba660-c08c-4bf0-9cd5-650c51a968f0");
+                Task t1_4 = prj1.GetTask("fcbfc3e8-88df-48f5-ae89-80a9ca159113");
+                Task t1_5 = prj1.GetTask("6d1ac5a8-1e68-4de9-901c-ee426d8ec681");
+
+                Assert.AreEqual("Test Task  1.1", t1_1.Name);
+                Assert.AreEqual("Test Task  1.2", t1_2.Name);
+                Assert.AreEqual("Test Task  1.3", t1_3.Name);
+                Assert.AreEqual("Test Task  1.4", t1_4.Name);
+                Assert.AreEqual("Test Task  1.5", t1_5.Name);
+
+                Project prj2 = prjList.First(p => p.ProjectName == "Test Project  2");
+                Task t2_1 = prj2.GetTask("19f6e9eb-1cf6-4416-81b1-e4b42e9d6dfe");
+                Task t2_2 = prj2.GetTask("56138652-f14a-4a26-bda6-c43976adb414");
+                Task t2_3 = prj2.GetTask("79962192-ad3d-44fc-bf15-cf9de5926dde");
+                Task t2_4 = prj2.GetTask("bd69d3bf-7dbe-4b88-88ca-d44d96b025f8");
+                Task t2_5 = prj2.GetTask("b76551c7-45f5-4712-a697-9dc0f93829ca");
+
+                Assert.AreEqual("Test Task  2.1", t2_1.Name);
+                Assert.AreEqual("Test Task  2.2", t2_2.Name);
+                Assert.AreEqual("Test Task  2.3", t2_3.Name);
+                Assert.AreEqual("Test Task  2.4", t2_4.Name);
+                Assert.AreEqual("Test Task  2.5", t2_5.Name);
+
+                Project prj3 = prjList.First(p => p.ProjectName == "Test Project  3");
+                Task t3_1 = prj3.GetTask("c61e4925-294c-4a68-81a3-aedd4c7754ac");
+                Task t3_2 = prj3.GetTask("9d3f2cee-84aa-4deb-b8e1-c5b88792f7e8");
+                Task t3_3 = prj3.GetTask("3c69e3d5-8883-4fe6-82e3-a19160db20a1");
+                Task t3_4 = prj3.GetTask("c98839f0-9ea5-4103-a72d-40f0afa6a114");
+                Task t3_5 = prj3.GetTask("6cb81a5a-439e-4b08-83a9-e4df143573f1");
+
+
+                Assert.AreEqual("Test Task  3.1", t3_1.Name);
+                Assert.AreEqual("Test Task  3.2", t3_2.Name);
+                Assert.AreEqual("Test Task  3.3", t3_3.Name);
+                Assert.AreEqual("Test Task  3.4", t3_4.Name);
+                Assert.AreEqual("Test Task  3.5", t3_5.Name);
+
+                Project prj4 = prjList.First(p => p.ProjectName == "Test Project  4");
+                Task t4_1 = prj4.GetTask("e95f56cb-5f37-4d87-af3d-a3267924c9aa");
+                Task t4_2 = prj4.GetTask("a73b0a06-a0b3-4f7f-827c-0a8c158565d4");
+                Task t4_3 = prj4.GetTask("d30a9ff9-fd68-41c8-9126-51c56c1f7e85");
+                Task t4_4 = prj4.GetTask("535a323a-3cc4-45f2-a0ad-a89debace4a2");
+                Task t4_5 = prj4.GetTask("6b1e3072-47de-4fc5-9579-4f07a2fa144c");
+
+                Assert.AreEqual("Test Task  4.1", t4_1.Name);
+                Assert.AreEqual("Test Task  4.2", t4_2.Name);
+                Assert.AreEqual("Test Task  4.3", t4_3.Name);
+                Assert.AreEqual("Test Task  4.4", t4_4.Name);
+                Assert.AreEqual("Test Task  4.5", t4_5.Name);
+
+                Project prj5 = prjList.First(p => p.ProjectName == "Test Project  5");
+                Task t5_1 = prj5.GetTask("e51921e6-1a20-407b-aca3-f0f50af176c8");
+                Task t5_2 = prj5.GetTask("e3edd351-f76d-465f-82e5-b44a772d72be");
+                Task t5_3 = prj5.GetTask("3a1dc098-c85c-49c9-bf76-48caf8bd7f3a");
+                Task t5_4 = prj5.GetTask("a2be4560-65e2-42e7-a930-04af97866c4f");
+                Task t5_5 = prj5.GetTask("a08c62ca-8036-4723-9b4d-2e2b615f9fef");
+
+                Assert.AreEqual("Test Task  5.1", t5_1.Name);
+                Assert.AreEqual("Test Task  5.2", t5_2.Name);
+                Assert.AreEqual("Test Task  5.3", t5_3.Name);
+                Assert.AreEqual("Test Task  5.4", t5_4.Name);
+                Assert.AreEqual("Test Task  5.5", t5_5.Name);
+
+                Project prj6 = prjList.First(p => p.ProjectName == "Test Project  6");
+                Task t6_1 = prj6.GetTask("a6dc6a7d-5744-4767-8f27-4dce529975f8");
+                Task t6_2 = prj6.GetTask("7c13673d-422e-411a-ac1d-2c3a166c1683");
+                Task t6_3 = prj6.GetTask("0a8935f4-2a80-40ff-ab1b-90a3bfa33d49");
+                Task t6_4 = prj6.GetTask("fb9cd0b5-4b50-4b52-9b81-ee2a577629e3");
+                Task t6_5 = prj6.GetTask("4ed89d52-47ca-4fd0-a7f2-df7a2c8c75cf");
+
+                Assert.AreEqual("Test Task  6.1", t6_1.Name);
+                Assert.AreEqual("Test Task  6.2", t6_2.Name);
+                Assert.AreEqual("Test Task  6.3", t6_3.Name);
+                Assert.AreEqual("Test Task  6.4", t6_4.Name);
+                Assert.AreEqual("Test Task  6.5", t6_5.Name);
+
+                Project prj7 = prjList.First(p => p.ProjectName == "Test Project  7");
+                Task t7_1 = prj7.GetTask("0fcbae3c-ac37-4ee8-95ef-10d190b17e2c");
+                Task t7_2 = prj7.GetTask("a4efcf3c-a920-4b6b-869f-1dc2340f4f1b");
+                Task t7_3 = prj7.GetTask("095c6c3b-4e4d-407e-9580-e7dd1c972a54");
+                Task t7_4 = prj7.GetTask("002d22b2-e42b-4b39-89c7-3d002783cc2e");
+                Task t7_5 = prj7.GetTask("4f5c8442-21a6-4235-b3a0-6bef72642e69");
+
+                Assert.AreEqual("Test Task  7.1", t7_1.Name);
+                Assert.AreEqual("Test Task  7.2", t7_2.Name);
+                Assert.AreEqual("Test Task  7.3", t7_3.Name);
+                Assert.AreEqual("Test Task  7.4", t7_4.Name);
+                Assert.AreEqual("Test Task  7.5", t7_5.Name);
+
+                Project prj8 = prjList.First(p => p.ProjectName == "Test Project  8");
+                Task t8_1 = prj8.GetTask("02fadb5d-e9d5-4726-b458-c4e15ca98633");
+                Task t8_2 = prj8.GetTask("b771aaa9-81b3-4e68-a7c9-a00c6135331f");
+                Task t8_3 = prj8.GetTask("366e78a9-c8fa-41f8-8660-4019c98614b1");
+                Task t8_4 = prj8.GetTask("3292b766-7206-4ff2-86dc-5957587975ec");
+                Task t8_5 = prj8.GetTask("1e676e6c-8ff7-462f-9500-e2cd2d613e94");
+
+                Assert.AreEqual("Test Task  8.1", t8_1.Name);
+                Assert.AreEqual("Test Task  8.2", t8_2.Name);
+                Assert.AreEqual("Test Task  8.3", t8_3.Name);
+                Assert.AreEqual("Test Task  8.4", t8_4.Name);
+                Assert.AreEqual("Test Task  8.5", t8_5.Name);
+
+                Project prj9 = prjList.First(p => p.ProjectName == "Test Project  9");
+                Task t9_1 = prj9.GetTask("f76bec0c-ac6d-4c5d-ba7a-64102867a307");
+                Task t9_2 = prj9.GetTask("d84f4b07-3ad6-44dd-8696-a770a044d660");
+                Task t9_3 = prj9.GetTask("04effe3e-d355-4094-b604-37ab8641307e");
+                Task t9_4 = prj9.GetTask("45c96282-7d5d-43dc-99aa-0dda9d550c38");
+                Task t9_5 = prj9.GetTask("d968c831-5def-433e-95f7-38965f50e1dd");
+
+                Assert.AreEqual("Test Task  9.1", t9_1.Name);
+                Assert.AreEqual("Test Task  9.2", t9_2.Name);
+                Assert.AreEqual("Test Task  9.3", t9_3.Name);
+                Assert.AreEqual("Test Task  9.4", t9_4.Name);
+                Assert.AreEqual("Test Task  9.5", t9_5.Name);
+
+                Project prj10 = prjList.First(p => p.ProjectName == "Test Project 10");
+                Task t10_1 = prj10.GetTask("0c6be24d-6516-41d6-9022-f50ddd1d7293");
+                Task t10_2 = prj10.GetTask("a5f571ff-3641-444d-8c8c-465e3b2081fe");
+                Task t10_3 = prj10.GetTask("68a7e284-cfb6-4435-8c0f-e8c68e437225");
+                Task t10_4 = prj10.GetTask("06b9a45c-e628-4bd5-ad30-2bca2a8b9ed9");
+                Task t10_5 = prj10.GetTask("2585ee54-2202-441f-9112-3ba9a8c7a3f9");
+
+                Assert.AreEqual("Test Task 10.1", t10_1.Name);
+                Assert.AreEqual("Test Task 10.2", t10_2.Name);
+                Assert.AreEqual("Test Task 10.3", t10_3.Name);
+                Assert.AreEqual("Test Task 10.4", t10_4.Name);
+                Assert.AreEqual("Test Task 10.5", t10_5.Name);
+            }
         }
     }
 }

@@ -2,6 +2,8 @@ using System.Data.SQLite;
 using System;
 using StormshrikeTODO.Model;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StormshrikeTODO.Persistence
 {
@@ -36,7 +38,6 @@ namespace StormshrikeTODO.Persistence
                 {
                     Context c = new Context(reader["ID"].ToString(), reader["Description"].ToString());
                     dc.Add(c);
-                    //Console.WriteLine("ID: " + reader["ID"] + "\tDescription: " + reader["Description"]);
                 }
                 db.Close();
             }
@@ -46,8 +47,7 @@ namespace StormshrikeTODO.Persistence
 
         public Collection<Project> LoadProjects()
         {
-            Collection<Task> taskCollection = new Collection<Task>();
-            LoadTasks(taskCollection);
+            var prjList = new Collection<Project>();
 
             using (SQLiteConnection db = new SQLiteConnection(_connStrBuilder.ConnectionString))
             {
@@ -57,24 +57,51 @@ namespace StormshrikeTODO.Persistence
                 SQLiteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.WriteLine("ID: " + reader["ID"] + "\tName: " + reader["Name"] + "\tDateTimeCreated: " + reader["DateTimeCreated"].ToString());
+                    //Console.WriteLine("ID: " + reader["ID"] + "\tName: " + reader["Name"] + "\tDateTimeCreated: " + reader["DateTimeCreated"].ToString());
+                    var prj = new Project(reader["Name"].ToString());
+                    prj.UniqueID = Guid.Parse(reader["ID"].ToString());
+
+                    if (!String.IsNullOrWhiteSpace(reader["DateDue"].ToString()))
+                    {
+                        prj.DueDate = ConvertDateTime(reader["DateDue"].ToString());
+                    }
+
+                    if (!String.IsNullOrWhiteSpace(reader["DateTimeCreated"].ToString()))
+                    {
+                        prj.DateTimeCreated = ConvertDateTime(reader["DateTimeCreated"].ToString());
+                    }
+
+                    //taskCollection.Where(t => t. == prj.UniqueID.ToString()).ToList().ForEach(t => prj.AddTask(t.Value));
+                    var taskCollection = LoadTasks(prj.UniqueID.ToString());
+                    foreach (var task in taskCollection)
+                    {
+                        prj.AddTask(task);
+
+                    }
+
+                    //Collection<Task> taskCollection = new Collection<Task>();
+
+
+                    prjList.Add(prj);
                 }
                 db.Close();
             }
-            return new Collection<Project>();
+
+            return prjList;
         }
 
-        private void LoadTasks(Collection<Task> taskCollection)
+        private Collection<Task> LoadTasks(string prjID)
         {
+            Collection<Task> taskCollection = new Collection<Task>();
             using (SQLiteConnection db = new SQLiteConnection(_connStrBuilder.ConnectionString))
             {
                 db.Open();
-                string sql = "SELECT * FROM Tasks";
+                string sql = "SELECT * FROM Tasks WHERE Tasks.ProjectID = '" + prjID + "'" ;
                 SQLiteCommand command = new SQLiteCommand(sql, db);
                 SQLiteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.WriteLine("ID: " + reader["ID"] + "\tName: " + reader["Name"] + "\tDateTimeCreated: " + reader["DateTimeCreated"].ToString());
+                    //Console.WriteLine("ID: " + reader["ID"] + "\tName: " + reader["Name"] + "\tDateTimeCreated: " + reader["DateTimeCreated"].ToString());
                     Task t = new Task(reader["Name"].ToString(), ConvertDateTimeNullable(reader["DateDue"].ToString()));
                     t.Order = Convert.ToInt32(reader["TaskOrder"].ToString());
                     Enum.TryParse(reader["Status"].ToString(), out Task.StatusEnum stat);
@@ -89,11 +116,12 @@ namespace StormshrikeTODO.Persistence
                     {
                         t.DateTimeCreated = ConvertDateTime(reader["DateTimeCreated"].ToString());
                     }
-                    Console.WriteLine(t.DateTimeCreated);
+                    //string prjID = reader["ProjectID"].ToString();
                     taskCollection.Add(t);
                 }
                 db.Close();
             }
+            return taskCollection;
         }
 
         private DateTime ConvertDateTime(String dateTimeStr)
