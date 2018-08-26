@@ -19,6 +19,8 @@ namespace StormshrikeTODO.Tests.Persistence
         private static string _testDbLocation = System.Environment.GetEnvironmentVariable("TEMP")
             + "\\StormshrikeTest-" + System.Diagnostics.Process.GetCurrentProcess().Id + ".db";
 
+        DateTime _testStartingDateTime = DateTime.Now;
+
         public static int RunPowershellScript(string ps, string args)
         {
             int errorLevel;
@@ -67,7 +69,6 @@ namespace StormshrikeTODO.Tests.Persistence
                 process.Close();
             }
 
-
             return errorLevel;
         }
 
@@ -76,7 +77,6 @@ namespace StormshrikeTODO.Tests.Persistence
         {
             CreateTestDB();
             LoadTestDataIntoDB();
-
         }
 
         private static void CreateTestDB()
@@ -140,10 +140,51 @@ namespace StormshrikeTODO.Tests.Persistence
                 Task t1_5 = prj1.GetTask("6d1ac5a8-1e68-4de9-901c-ee426d8ec681");
 
                 Assert.AreEqual("Test Task  1.1", t1_1.Name);
+                Assert.AreEqual("Detail 1.1", t1_1.Details);
+                Assert.AreEqual(1000, t1_1.Order);
+                Assert.AreEqual(Model.Task.StatusEnum.New, t1_1.Status);
+                Assert.AreEqual(DateTime.Parse("2018-01-01 01:30:54"), t1_1.DateTimeCreated);
+                Assert.AreEqual(null, t1_1.DateDue);
+                Assert.AreEqual(null, t1_1.DateCompleted);
+                Assert.AreEqual(null, t1_1.DateStarted);
+
+
                 Assert.AreEqual("Test Task  1.2", t1_2.Name);
+                Assert.AreEqual("", t1_2.Details);
+                Assert.AreEqual(2000, t1_2.Order);
+                Assert.AreEqual(Model.Task.StatusEnum.Done, t1_2.Status);
+                Assert.IsTrue(_testStartingDateTime <= t1_2.DateTimeCreated);
+                Assert.IsTrue(DateTime.Now >= t1_2.DateTimeCreated);
+                Assert.AreEqual(null, t1_2.DateDue);
+                Assert.AreEqual(DateTime.Parse("2018-01-02"), t1_2.DateCompleted);
+                Assert.AreEqual(null, t1_2.DateStarted);
+
                 Assert.AreEqual("Test Task  1.3", t1_3.Name);
+                Assert.AreEqual("", t1_3.Details);
+                Assert.AreEqual(3000, t1_3.Order);
+                Assert.AreEqual(Model.Task.StatusEnum.InProgress, t1_3.Status);
+                Assert.AreEqual(DateTime.Parse("2018-01-03 03:30:54"), t1_3.DateTimeCreated);
+                Assert.AreEqual(null, t1_3.DateStarted);
+                Assert.AreEqual(null, t1_3.DateCompleted);
+                Assert.AreEqual(DateTime.Parse("2018-01-03"), t1_3.DateDue);
+
                 Assert.AreEqual("Test Task  1.4", t1_4.Name);
+                Assert.AreEqual("", t1_4.Details);
+                Assert.AreEqual(4000, t1_4.Order);
+                Assert.AreEqual(Model.Task.StatusEnum.Waiting, t1_4.Status);
+                Assert.AreEqual(DateTime.Parse("2018-01-04 04:30:54"), t1_4.DateTimeCreated);
+                Assert.AreEqual(null, t1_4.DateDue);
+                Assert.AreEqual(null, t1_4.DateCompleted);
+                Assert.AreEqual(DateTime.Parse("2018-01-04"), t1_4.DateStarted);
+
                 Assert.AreEqual("Test Task  1.5", t1_5.Name);
+                Assert.AreEqual("", t1_5.Details);
+                Assert.AreEqual(5000, t1_5.Order);
+                Assert.AreEqual(Model.Task.StatusEnum.NotStarted, t1_5.Status);
+                Assert.AreEqual(DateTime.Parse("2018-01-05 05:30:54"), t1_5.DateTimeCreated);
+                Assert.AreEqual(null, t1_5.DateDue);
+                Assert.AreEqual(null, t1_5.DateCompleted);
+                Assert.AreEqual(null, t1_5.DateStarted);
 
                 Project prj2 = prjList.First(p => p.ProjectName == "Test Project  2");
                 Task t2_1 = prj2.GetTask("19f6e9eb-1cf6-4416-81b1-e4b42e9d6dfe");

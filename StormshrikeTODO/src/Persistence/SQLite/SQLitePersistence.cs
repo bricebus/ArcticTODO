@@ -71,16 +71,11 @@ namespace StormshrikeTODO.Persistence
                         prj.DateTimeCreated = ConvertDateTime(reader["DateTimeCreated"].ToString());
                     }
 
-                    //taskCollection.Where(t => t. == prj.UniqueID.ToString()).ToList().ForEach(t => prj.AddTask(t.Value));
                     var taskCollection = LoadTasks(prj.UniqueID.ToString());
                     foreach (var task in taskCollection)
                     {
                         prj.AddTask(task);
-
                     }
-
-                    //Collection<Task> taskCollection = new Collection<Task>();
-
 
                     prjList.Add(prj);
                 }
@@ -96,27 +91,37 @@ namespace StormshrikeTODO.Persistence
             using (SQLiteConnection db = new SQLiteConnection(_connStrBuilder.ConnectionString))
             {
                 db.Open();
-                string sql = "SELECT * FROM Tasks WHERE Tasks.ProjectID = '" + prjID + "'" ;
+                string sql = "SELECT * FROM Tasks WHERE Tasks.ProjectID = @prjID";
                 SQLiteCommand command = new SQLiteCommand(sql, db);
+                command.Parameters.AddWithValue("@prjID", prjID);
                 SQLiteDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     //Console.WriteLine("ID: " + reader["ID"] + "\tName: " + reader["Name"] + "\tDateTimeCreated: " + reader["DateTimeCreated"].ToString());
-                    Task t = new Task(reader["Name"].ToString(), ConvertDateTimeNullable(reader["DateDue"].ToString()));
-                    t.Order = Convert.ToInt32(reader["TaskOrder"].ToString());
-                    Enum.TryParse(reader["Status"].ToString(), out Task.StatusEnum stat);
-                    t.Status = stat;
-                    t.UniqueID = Guid.Parse(reader["ID"].ToString());
-                    t.ContextID = reader["ContextID"].ToString();
-                    t.DateCompleted = ConvertDateTimeNullable(reader["DateTimeCompleted"].ToString());
-                    t.DateStarted = ConvertDateTimeNullable(reader["DateStarted"].ToString());
-                    t.Details = reader["Details"].ToString();
+                    Task t = new Task(reader["Name"].ToString(), ConvertDateTimeNullable(reader["DateDue"].ToString()))
+                    {
+                        Order = Convert.ToInt32(reader["TaskOrder"].ToString()),
+                        UniqueID = Guid.Parse(reader["ID"].ToString()),
+                        ContextID = reader["ContextID"].ToString(),
+                        DateCompleted = ConvertDateTimeNullable(reader["DateTimeCompleted"].ToString()),
+                        Details = reader["Details"].ToString(),
+                        Status = GetStatusEnum(reader["Status"].ToString())
+                    };
 
                     if (!String.IsNullOrWhiteSpace(reader["DateTimeCreated"].ToString()))
                     {
                         t.DateTimeCreated = ConvertDateTime(reader["DateTimeCreated"].ToString());
                     }
-                    //string prjID = reader["ProjectID"].ToString();
+
+                    if (!String.IsNullOrWhiteSpace(reader["DateStarted"].ToString()))
+                    {
+                        t.DateStarted = ConvertDateTimeNullable(reader["DateStarted"].ToString());
+                    }
+                    else
+                    {
+                        t.DateStarted = null;
+                    }
+
                     taskCollection.Add(t);
                 }
                 db.Close();
@@ -124,28 +129,21 @@ namespace StormshrikeTODO.Persistence
             return taskCollection;
         }
 
+        private Task.StatusEnum GetStatusEnum(String statusStr)
+        {
+            Enum.TryParse(statusStr, out Task.StatusEnum stat);
+            return stat;
+        }
+
         private DateTime ConvertDateTime(String dateTimeStr)
         {
-            DateTime dtParsed;
-            DateTime dt = DateTime.MinValue;
-            bool parsed = DateTime.TryParse(dateTimeStr, out dtParsed);
-            if (parsed)
-            {
-                dt = dtParsed;
-            }
-            return dt;
+            return DateTime.TryParse(dateTimeStr, out DateTime dtParsed) ? dtParsed : DateTime.MinValue;
         }
 
         private DateTime? ConvertDateTimeNullable(String dateTimeStr)
         {
-            DateTime dt;
-            bool parsed = DateTime.TryParse(dateTimeStr, out dt);
-            if (parsed)
-            {
-                return dt;
-
-            }
-            return null;
+            DateTime? dtNull = null;
+            return (DateTime.TryParse(dateTimeStr, out DateTime dt) ? dt : dtNull);
         }
 
         public void SaveContexts(DefinedContexts definedContexts)

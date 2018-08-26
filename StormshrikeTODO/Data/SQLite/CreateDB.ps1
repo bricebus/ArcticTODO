@@ -12,7 +12,7 @@ if (Test-Path $dblocation) {
 
 echo "Loading Projects.sql"
 sqlite3 $dblocation ".read Projects.sql"
-echo "Turning on Foreign Keys"
+echo "Loading Tasks"
 sqlite3 $dblocation ".read Tasks.sql"
 echo "Loading Contexts.sql"
 sqlite3 $dblocation ".read Contexts.sql"
