@@ -5,6 +5,7 @@ INSERT INTO Contexts VALUES("be17f3e2-764b-43b5-b943-63faf6223863", "Office");
 INSERT INTO Contexts VALUES("f89d513b-c24d-468e-99f3-b841e5ceca6f", "Computer");
 INSERT INTO Contexts VALUES("ae7491da-4a83-4cc6-ad26-cd090e81417b", "Errands");
 INSERT INTO Contexts VALUES("c50d02de-d22c-475b-9fef-6e24c05f966b", "Phone");
+INSERT INTO Contexts VALUES("1b9c460b-0287-4011-87fc-0ae0c5f7b81c", "Manager");
 
 --strftime('%Y-%m-%d %H:%M:%S', ...) 
 --strftime('%Y-%m-%d %H:%M:%f', ...) 

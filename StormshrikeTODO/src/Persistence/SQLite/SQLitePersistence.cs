@@ -146,9 +146,65 @@ namespace StormshrikeTODO.Persistence
             return (DateTime.TryParse(dateTimeStr, out DateTime dt) ? dt : dtNull);
         }
 
-        public void SaveContexts(DefinedContexts definedContexts)
+        public void SaveContexts(DefinedContexts dcNew)
         {
-            throw new NotImplementedException();
+            int changedCount = 0;
+            DefinedContexts dcDB = LoadContexts();
+            if (DefinedContexts.IdentifyDifferences(dcDB, dcNew, out List<Context> newList,
+                out List<Context> chgList, out List<Context> delList))
+            {
+                using (SQLiteConnection db = new SQLiteConnection(_connStrBuilder.ConnectionString))
+                {
+                    db.Open();
+                    foreach (var changedItem in chgList)
+                    {
+                        SQLiteCommand cmd = buildChangedContextSQL(changedItem, db);
+                        changedCount += cmd.ExecuteNonQuery();
+                    }
+
+                    foreach (var deletedItem in delList)
+                    {
+                        SQLiteCommand cmd = buildDeletedContextSQL(deletedItem, db);
+                        changedCount += cmd.ExecuteNonQuery();
+                    }
+
+                    foreach (var newItem in newList)
+                    {
+                        SQLiteCommand cmd = buildNewContextSQL(newItem, db);
+                        changedCount += cmd.ExecuteNonQuery();
+                    }
+                }
+
+            }
+        }
+
+        private SQLiteCommand buildChangedContextSQL (Context ctx, SQLiteConnection db)
+        {
+            string sql = "UPDATE Contexts SET Description = @Description WHERE Contexts.ID = @ID";
+            SQLiteCommand command = new SQLiteCommand(sql, db);
+            command.Parameters.AddWithValue("@ID", ctx.ID);
+            command.Parameters.AddWithValue("@Description", ctx.Description);
+
+            return command;
+        }
+
+        private SQLiteCommand buildNewContextSQL(Context ctx, SQLiteConnection db)
+        {
+            string sql = "INSERT INTO Contexts VALUES(@ID, @Description)";
+            SQLiteCommand command = new SQLiteCommand(sql, db);
+            command.Parameters.AddWithValue("@ID", ctx.ID);
+            command.Parameters.AddWithValue("@Description", ctx.Description);
+
+            return command;
+        }
+
+        private SQLiteCommand buildDeletedContextSQL (Context ctx, SQLiteConnection db)
+        {
+            string sql = "DELETE FROM Contexts WHERE Contexts.ID = @ID";
+            SQLiteCommand command = new SQLiteCommand(sql, db);
+            command.Parameters.AddWithValue("@ID", ctx.ID);
+
+            return command;
         }
 
         public void SaveProjects(Collection<Project> projectList)

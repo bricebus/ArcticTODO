@@ -110,14 +110,144 @@ namespace StormshrikeTODO.Tests.Persistence
             using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
             {
                 DefinedContexts dc = sqlite.LoadContexts();
-                Assert.AreEqual(5, dc.Count);
+                Assert.AreEqual(6, dc.Count);
                 Assert.AreEqual("2ad57821-dad5-4e0a-abb4-47d99b314f21", dc.FindIdByDescr("Home").ID);
                 Assert.AreEqual("be17f3e2-764b-43b5-b943-63faf6223863", dc.FindIdByDescr("Office").ID);
                 Assert.AreEqual("f89d513b-c24d-468e-99f3-b841e5ceca6f", dc.FindIdByDescr("Computer").ID);
                 Assert.AreEqual("ae7491da-4a83-4cc6-ad26-cd090e81417b", dc.FindIdByDescr("Errands").ID);
                 Assert.AreEqual("c50d02de-d22c-475b-9fef-6e24c05f966b", dc.FindIdByDescr("Phone").ID);
+                Assert.AreEqual("1b9c460b-0287-4011-87fc-0ae0c5f7b81c", dc.FindIdByDescr("Manager").ID);
             }
 
+        }
+
+        [TestMethod]
+        public void TestSaveContexts_NoChanges()
+        {
+            DefinedContexts dc = null;
+            DefinedContexts dcNew = null;
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                dc = sqlite.LoadContexts();
+            }
+
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                sqlite.SaveContexts(dc);
+            }
+
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                dcNew = sqlite.LoadContexts();
+            }
+
+            Assert.IsFalse(DefinedContexts.AreDifferences(dc, dcNew));
+        }
+
+        [TestMethod]
+        public void TestSaveContexts_Change()
+        {
+            DefinedContexts dc = null;
+            DefinedContexts dcNew = null;
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                dc = sqlite.LoadContexts();
+            }
+
+            Context ctx = dc.FindIdByID("2ad57821-dad5-4e0a-abb4-47d99b314f21");
+            ctx.Description = "Home Office";
+
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                sqlite.SaveContexts(dc);
+            }
+
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                dcNew = sqlite.LoadContexts();
+                Assert.AreEqual(6, dcNew.Count);
+                Assert.AreEqual("2ad57821-dad5-4e0a-abb4-47d99b314f21", dcNew.FindIdByDescr("Home Office").ID);
+                Assert.AreEqual("be17f3e2-764b-43b5-b943-63faf6223863", dcNew.FindIdByDescr("Office").ID);
+                Assert.AreEqual("f89d513b-c24d-468e-99f3-b841e5ceca6f", dcNew.FindIdByDescr("Computer").ID);
+                Assert.AreEqual("ae7491da-4a83-4cc6-ad26-cd090e81417b", dcNew.FindIdByDescr("Errands").ID);
+                Assert.AreEqual("c50d02de-d22c-475b-9fef-6e24c05f966b", dcNew.FindIdByDescr("Phone").ID);
+                Assert.AreEqual("1b9c460b-0287-4011-87fc-0ae0c5f7b81c", dcNew.FindIdByDescr("Manager").ID);
+            }
+            Assert.IsFalse(DefinedContexts.AreDifferences(dc, dcNew));
+
+            // Reset test DB after changing it
+            CreateTestDB();
+            LoadTestDataIntoDB();
+        }
+
+        [TestMethod]
+        public void TestSaveContexts_Deleted()
+        {
+            DefinedContexts dc = null;
+            DefinedContexts dcNew = null;
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                dc = sqlite.LoadContexts();
+            }
+
+            dc.Remove("1b9c460b-0287-4011-87fc-0ae0c5f7b81c");
+
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                sqlite.SaveContexts(dc);
+            }
+
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                dcNew = sqlite.LoadContexts();
+                Assert.AreEqual(5, dcNew.Count);
+                Assert.AreEqual("2ad57821-dad5-4e0a-abb4-47d99b314f21", dc.FindIdByDescr("Home").ID);
+                Assert.AreEqual("be17f3e2-764b-43b5-b943-63faf6223863", dcNew.FindIdByDescr("Office").ID);
+                Assert.AreEqual("f89d513b-c24d-468e-99f3-b841e5ceca6f", dcNew.FindIdByDescr("Computer").ID);
+                Assert.AreEqual("ae7491da-4a83-4cc6-ad26-cd090e81417b", dcNew.FindIdByDescr("Errands").ID);
+                Assert.AreEqual("c50d02de-d22c-475b-9fef-6e24c05f966b", dcNew.FindIdByDescr("Phone").ID);
+            }
+            Assert.IsFalse(DefinedContexts.AreDifferences(dc, dcNew));
+
+            // Reset test DB after changing it
+            CreateTestDB();
+            LoadTestDataIntoDB();
+        }
+
+        [TestMethod]
+        public void TestSaveContexts_New()
+        {
+            DefinedContexts dc = null;
+            DefinedContexts dcNew = null;
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                dc = sqlite.LoadContexts();
+            }
+
+            dc.Add(new Context("b19bce30-96fe-46dc-b408-891a12a3a933", "Weekly Team Meeting"));
+
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                sqlite.SaveContexts(dc);
+            }
+
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                dcNew = sqlite.LoadContexts();
+                Assert.AreEqual(7, dcNew.Count);
+                Assert.AreEqual("2ad57821-dad5-4e0a-abb4-47d99b314f21", dcNew.FindIdByDescr("Home").ID);
+                Assert.AreEqual("be17f3e2-764b-43b5-b943-63faf6223863", dcNew.FindIdByDescr("Office").ID);
+                Assert.AreEqual("f89d513b-c24d-468e-99f3-b841e5ceca6f", dcNew.FindIdByDescr("Computer").ID);
+                Assert.AreEqual("ae7491da-4a83-4cc6-ad26-cd090e81417b", dcNew.FindIdByDescr("Errands").ID);
+                Assert.AreEqual("c50d02de-d22c-475b-9fef-6e24c05f966b", dcNew.FindIdByDescr("Phone").ID);
+                Assert.AreEqual("1b9c460b-0287-4011-87fc-0ae0c5f7b81c", dcNew.FindIdByDescr("Manager").ID);
+                Assert.AreEqual("b19bce30-96fe-46dc-b408-891a12a3a933", dcNew.FindIdByDescr("Weekly Team Meeting").ID);
+            }
+            Assert.IsFalse(DefinedContexts.AreDifferences(dc, dcNew));
+
+            // Reset test DB after changing it
+            CreateTestDB();
+            LoadTestDataIntoDB();
         }
 
         [TestMethod]

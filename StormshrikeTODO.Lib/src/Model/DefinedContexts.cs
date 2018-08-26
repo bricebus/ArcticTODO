@@ -86,5 +86,46 @@ namespace StormshrikeTODO.Model
             }
             return _idKey.ContainsKey(id);
         }
+
+        public static bool IdentifyDifferences(DefinedContexts oldDC, DefinedContexts newDC,
+            out List<Context> newList, out List<Context> chgList, out List<Context> delList)
+        {
+            newList = new List<Context>();
+            chgList = new List<Context>();
+            delList = new List<Context>();
+            foreach (var ctx1 in oldDC.GetList())
+            {
+                var ctx2 = newDC.FindIdByID(ctx1.ID);
+                if (ctx2 == null)
+                {
+                    delList.Add(ctx1);
+                }
+                else
+                {
+                    if (ctx1.Description != ctx2.Description)
+                    {
+                        chgList.Add(ctx2);
+                    }
+                }
+
+            }
+
+            foreach (var ctx2 in newDC.GetList())
+            {
+                var ctx1 = oldDC.FindIdByID(ctx2.ID);
+                if (ctx1 == null)
+                {
+                    newList.Add(ctx2);
+                }
+            }
+
+            return !(newList.Count == 0 && chgList.Count == 0 && delList.Count == 0);
+        }
+
+        public static bool AreDifferences(DefinedContexts dc1, DefinedContexts dc2)
+        {
+            return DefinedContexts.IdentifyDifferences(dc1, dc2, out List<Context> newList,
+                out List<Context> chgList, out List<Context> delList);
+        }
     }
 }
