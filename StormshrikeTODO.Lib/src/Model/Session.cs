@@ -94,9 +94,15 @@ namespace StormshrikeTODO.Model
             _projectList.Remove(prj);
         }
 
-        public void LoadDefaultContexts()
+        public bool LoadDefaultContexts()
         {
+            if (this.Contexts != null && this.Contexts.Count > 0)
+            {
+                return false;
+            }
+
             this.Contexts = new DefaultContextGenerator().GenerateDefaultContexts();
+            return true;
         }
 
         public List<Task> GetTaskList(Guid prjID)

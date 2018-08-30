@@ -120,7 +120,7 @@ namespace StormshrikeTODO.Tests
             var prj1 = new Project("Test Project1", DateTime.Parse("1/1/2017"));
             var prj2 = new Project("Test Project2", DateTime.Parse("1/1/2018"));
             var task = new Task("Test Task 1.1", DateTime.Parse("7/1/2016"));
-            prj1.AddTask(task);
+//            prj1.AddTask(task);
             var prjList = new Collection<Project>();
             prjList.Add(prj1);
             prjList.Add(prj2);
@@ -271,11 +271,32 @@ namespace StormshrikeTODO.Tests
             Session session = LoadTestSession(prjList, null);
 
             Assert.IsNull(session.Contexts);
-            session.LoadDefaultContexts();
+            Assert.IsTrue(session.LoadDefaultContexts());
 
             DefinedContexts defaultContexts = new DefaultContextGenerator().GenerateDefaultContexts();
             Assert.AreEqual(defaultContexts.Count, session.Contexts.Count);
             foreach (var c in defaultContexts.GetList())
+            {
+                Assert.AreEqual(c.Description, session.Contexts.FindIdByDescr(c.Description).Description);
+            }
+
+        }
+
+        [TestMethod]
+        public void TestLoadDefaultContextsFail()
+        {
+            Collection<Project> prjList = GetTestProjectList();
+            DefinedContexts dc = GetTestContexts();
+            Session session = LoadTestSession(prjList, null);
+
+            session.Contexts = dc;
+            Assert.IsNotNull(session.Contexts);
+               
+            // LoadDefaultContexts should not replace existing Contexts.
+            Assert.IsFalse(session.LoadDefaultContexts());
+
+            Assert.AreEqual(dc.Count, session.Contexts.Count);
+            foreach (var c in dc.GetList())
             {
                 Assert.AreEqual(c.Description, session.Contexts.FindIdByDescr(c.Description).Description);
             }

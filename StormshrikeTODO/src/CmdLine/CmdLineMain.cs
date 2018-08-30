@@ -507,7 +507,11 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd == LOAD_DEFAULT_CONTEXTS_CMD)
                     {
-                        _session.LoadDefaultContexts();
+                        var result = _session.LoadDefaultContexts();
+                        if (!result)
+                        {
+                            System.Console.Out.WriteLine("Could not load Default Contexts - Contexts already exist");
+                        }
                     }
                     else if (inputCmd == "?" || inputCmd == "help")
                     {

@@ -46,6 +46,8 @@
     <Compile Include="Model\ProjectTest.cs" />
     <Compile Include="Model\SessionTest.cs" />
     <Compile Include="Model\DefinedContextsTest.cs" />
+    <Compile Include="Model\TaskComparerTest.cs" />
+    <Compile Include="Model\TestTaskCreator.cs" />
     <Compile Include="Model\UtilityTest.cs" />
     <Compile Include="Model\TaskTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

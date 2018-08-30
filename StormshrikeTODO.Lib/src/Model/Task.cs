@@ -9,7 +9,7 @@ using System.Text;
 namespace StormshrikeTODO.Model
 {
     [Serializable]
-    public class Task
+    public class Task : IEquivalence<Task>
     {
         public enum StatusEnum
         {
@@ -20,12 +20,12 @@ namespace StormshrikeTODO.Model
             Done
         }
 
+        public String Name { get; set; }
         public String ContextID { get; set; }
 
         public DateTime? DateDue { get; set; }
         public DateTime? DateStarted { get; set; }
         public DateTime? DateCompleted { get; set; }
-        public String Name { get; set; }
 
         private StatusEnum _status;
         public StatusEnum Status
@@ -62,7 +62,6 @@ namespace StormshrikeTODO.Model
         public DateTime DateTimeCreated { get; set; }
 
 
-
         internal Task()
         {
 
@@ -83,19 +82,6 @@ namespace StormshrikeTODO.Model
             this.DateDue = dueDate;
         }
 
-        //public static T DeepClone<T>(T obj)
-        //{
-            //using (var ms = new MemoryStream())
-            //{
-            //    var formatter = new BinaryFormatter();
-            //    formatter.Serialize(ms, obj);
-            //    ms.Position = 0;
-
-            //    return (T)formatter.Deserialize(ms);
-            //}
-            //return obj;
-        //}
-
         public override String ToString()
         {
             return String.Format(
@@ -106,11 +92,30 @@ namespace StormshrikeTODO.Model
                 Utility.GetDateTimeString(this.DateCompleted), this.Order);
         }
 
-
         public void StartTask()
         {
             this.Status = StatusEnum.InProgress;
             this.DateStarted = DateTime.Now;
+        }
+
+        public bool IsEquivalentTo(Task other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            return
+                this.Status == other.Status &&
+                this.ContextID == other.ContextID &&
+                this.DateDue == other.DateDue &&
+                this.DateStarted == other.DateStarted &&
+                this.DateCompleted == other.DateCompleted &&
+                this.Name == other.Name &&
+                this.Details == other.Details &&
+                this.UniqueID == other.UniqueID &&
+                this.Order == other.Order &&
+                this.DateTimeCreated == other.DateTimeCreated;
         }
     }
 }

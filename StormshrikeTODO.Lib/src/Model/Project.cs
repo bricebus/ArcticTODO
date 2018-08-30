@@ -89,7 +89,7 @@ namespace StormshrikeTODO.Model
             Collection<Task> taskListToReturn = new Collection<Task>();
             foreach (var t in _taskList)
             {
-               taskListToReturn.Add(t);
+                taskListToReturn.Add(t);
             }
 
             return taskListToReturn;
@@ -147,8 +147,7 @@ namespace StormshrikeTODO.Model
 
         public Task GetTask(String taskIdStr)
         {
-            Guid taskId;
-            var parseSuccessful = Guid.TryParse (taskIdStr, out taskId);
+            var parseSuccessful = Guid.TryParse(taskIdStr, out Guid taskId);
             if (!parseSuccessful)
             {
                 return null;
@@ -204,7 +203,6 @@ namespace StormshrikeTODO.Model
             OrderTasks();
         }
 
-
         public void MoveTaskLast(string taskIdStr)
         {
             var task = GetTask(taskIdStr);
@@ -214,6 +212,42 @@ namespace StormshrikeTODO.Model
             }
             task.Order = Int32.MaxValue;
             OrderTasks();
+        }
+
+        public bool IsTaskListEquivalentTo(Collection<Task> otherTaskList)
+        {
+            if (this.TaskList.Count != otherTaskList.Count)
+            {
+                return false;
+            }
+
+            foreach (var task in this.TaskList)
+            {
+                Task tother = otherTaskList.Where(t => t.UniqueID == task.UniqueID).FirstOrDefault();
+                if (tother == null || !task.IsEquivalentTo(tother))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public bool IsEquivalentTo(Project other)
+        {
+            if (!this.AreProjectAttributesEquivalentTo(other))
+            {
+                return false;
+            }
+
+            return this.IsTaskListEquivalentTo(other.TaskList);
+        }
+
+        public bool AreProjectAttributesEquivalentTo(Project other)
+        {
+            return (this.DateTimeCreated == other.DateTimeCreated &&
+                this.DueDate == other.DueDate &&
+                this.ProjectName == other.ProjectName &&
+                this.UniqueID == other.UniqueID);
         }
     }
 }

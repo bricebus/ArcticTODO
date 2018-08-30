@@ -251,6 +251,19 @@ namespace StormshrikeTODO.Tests.Persistence
         }
 
         [TestMethod]
+        public void TestSaveProject_DeleteProject()
+        {
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            {
+                Collection<Project> prjList = sqlite.LoadProjects();
+
+            }
+
+            CreateTestDB();
+            LoadTestDataIntoDB();
+        }
+
+        [TestMethod]
         public void TestLoadProjects()
         {
             using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
@@ -259,7 +272,7 @@ namespace StormshrikeTODO.Tests.Persistence
                 Assert.AreEqual(10, prjList.Count);
                 foreach (var prj in prjList)
                 {
-                   Assert.AreEqual(5, prj.TaskCount);
+                    Assert.AreEqual(5, prj.TaskCount);
                 }
 
                 Project prj1 = prjList.First(p => p.ProjectName == "Test Project  1");
@@ -277,7 +290,6 @@ namespace StormshrikeTODO.Tests.Persistence
                 Assert.AreEqual(null, t1_1.DateDue);
                 Assert.AreEqual(null, t1_1.DateCompleted);
                 Assert.AreEqual(null, t1_1.DateStarted);
-
 
                 Assert.AreEqual("Test Task  1.2", t1_2.Name);
                 Assert.AreEqual("", t1_2.Details);

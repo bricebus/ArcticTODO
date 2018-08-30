@@ -148,7 +148,6 @@ namespace StormshrikeTODO.Persistence
 
         public void SaveContexts(DefinedContexts dcNew)
         {
-            int changedCount = 0;
             DefinedContexts dcDB = LoadContexts();
             if (DefinedContexts.IdentifyDifferences(dcDB, dcNew, out List<Context> newList,
                 out List<Context> chgList, out List<Context> delList))
@@ -159,19 +158,19 @@ namespace StormshrikeTODO.Persistence
                     foreach (var changedItem in chgList)
                     {
                         SQLiteCommand cmd = buildChangedContextSQL(changedItem, db);
-                        changedCount += cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
                     }
 
                     foreach (var deletedItem in delList)
                     {
                         SQLiteCommand cmd = buildDeletedContextSQL(deletedItem, db);
-                        changedCount += cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
                     }
 
                     foreach (var newItem in newList)
                     {
                         SQLiteCommand cmd = buildNewContextSQL(newItem, db);
-                        changedCount += cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
                     }
                 }
 
