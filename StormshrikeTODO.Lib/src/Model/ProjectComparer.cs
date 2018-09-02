@@ -52,13 +52,5 @@ namespace StormshrikeTODO.Model
             }
             return chgList.Count == 0 && addList.Count == 0 && delList.Count == 0 && chgTaskList.Count == 0;
         }
-
-        //public static bool AreListsEquivalent(Collection<Project> prjList1, Collection<Project> prjList2,
-        //    out List<Project> chgList, out List<Project> addList, out List<Project> delList)
-        //{
-
-        //    return AreListsEquivalent(prjList1, prjList2, out chgList, out addList, out delList,
-        //        out List<Project> chgTaskList);
-        //}
     }
 }

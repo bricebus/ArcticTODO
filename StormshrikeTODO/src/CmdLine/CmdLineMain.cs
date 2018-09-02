@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
 using StormshrikeTODO.Model;
 using StormshrikeTODO.Persistence;
 
@@ -9,6 +10,8 @@ namespace StormshrikeTODO.CmdLine
 {
     public class CmdLineMain
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(CmdLineMain));
+
         private Session _session = null;
 
         private const string LOAD_CMD = "load";
@@ -54,6 +57,7 @@ namespace StormshrikeTODO.CmdLine
 
         public int Start(string[] args)
         {
+            log.Info("Starting main loop");
             while (true)
             {
                 try
@@ -519,7 +523,8 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else if (inputCmd == EXIT_CMD)
                     {
-                        return 0;
+                        log.Info("Exiting StormshrikeTODO. Bye!");
+                        break;
                     }
                     else
                     {
@@ -532,7 +537,11 @@ namespace StormshrikeTODO.CmdLine
                     System.Console.WriteLine("     :" + e.InnerException.Message);
 
                 }
+
             }
+            log.Info("Stopping main loop");
+
+            return 0;
         }
 
         private static void ListCommands()

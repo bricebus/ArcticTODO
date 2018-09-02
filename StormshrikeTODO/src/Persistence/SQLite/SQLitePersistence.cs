@@ -4,14 +4,18 @@ using StormshrikeTODO.Model;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Linq;
+using log4net;
 
 namespace StormshrikeTODO.Persistence
 {
     public class SQLitePersistence : IPersistence, IDisposable
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(SQLitePersistence));
+
         SQLiteConnectionStringBuilder _connStrBuilder;
         public SQLitePersistence(SQLitePersistenceConfig config)
         {
+            log.Info("DB File: " + config.DbFileLocation);
             if (!System.IO.File.Exists(config.DbFileLocation))
             {
                 throw new ArgumentException("DB File does not exist: " + config.DbFileLocation);
@@ -27,6 +31,7 @@ namespace StormshrikeTODO.Persistence
 
         public DefinedContexts LoadContexts()
         {
+            log.Info("Loading Contexts...");
             DefinedContexts dc = new DefinedContexts();
             using (SQLiteConnection db = new SQLiteConnection(_connStrBuilder.ConnectionString))
             {
@@ -42,11 +47,15 @@ namespace StormshrikeTODO.Persistence
                 db.Close();
             }
 
+            log.Info("Done loading Contexts");
+
             return dc;
         }
 
         public Collection<Project> LoadProjects()
         {
+            log.Info("Loading Projects...");
+
             var prjList = new Collection<Project>();
 
             using (SQLiteConnection db = new SQLiteConnection(_connStrBuilder.ConnectionString))
@@ -84,11 +93,14 @@ namespace StormshrikeTODO.Persistence
                 db.Close();
             }
 
+            log.Info("Done loading Projects");
             return prjList;
         }
 
         public Collection<Task> LoadTasks(string prjID)
         {
+            log.Info("Loading Tasks for Project: " + prjID);
+
             Collection<Task> taskCollection = new Collection<Task>();
             using (SQLiteConnection db = new SQLiteConnection(_connStrBuilder.ConnectionString))
             {
@@ -128,6 +140,7 @@ namespace StormshrikeTODO.Persistence
                 }
                 db.Close();
             }
+            log.Info("Done loading Tasks for Project: " + prjID);
             return taskCollection;
         }
 
@@ -150,6 +163,7 @@ namespace StormshrikeTODO.Persistence
 
         public void SaveContexts(DefinedContexts dcNew)
         {
+            log.Info("Saving Contexts");
             DefinedContexts dcDB = LoadContexts();
             if (DefinedContexts.IdentifyDifferences(dcDB, dcNew, out List<Context> newList,
                 out List<Context> chgList, out List<Context> delList))
@@ -176,12 +190,13 @@ namespace StormshrikeTODO.Persistence
                     }
                     db.Close();
                 }
-
             }
+            log.Info("Done saving Contexts");
         }
 
         public void SaveProjects(Collection<Project> prjListNew)
         {
+            log.Info("Saving Projects");
             var prjListFromDB = new Collection<Project>();
             using (SQLiteConnection db = new SQLiteConnection(_connStrBuilder.ConnectionString))
             {
@@ -247,6 +262,7 @@ namespace StormshrikeTODO.Persistence
                     db.Close();
                 }
             }
+            log.Info("Done saving Projects");
         }
 
         private SQLiteCommand BuildChangedTaskSQL(Task changedTask, string projectID, SQLiteConnection db)

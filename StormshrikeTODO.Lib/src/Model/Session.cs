@@ -3,11 +3,14 @@ using StormshrikeTODO.Persistence;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;
+using log4net;
 
 namespace StormshrikeTODO.Model
 {
     public class Session
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private IPersistence _savePersistence;
         private IPersistence _loadPersistence;
         private IPersistence _persistence;
@@ -21,6 +24,7 @@ namespace StormshrikeTODO.Model
 
         public Session(IPersistence persistence)
         {
+            log.Info("Starting Session");
             _persistence = persistence;
             _savePersistence = persistence;
             _loadPersistence = persistence;
@@ -28,6 +32,7 @@ namespace StormshrikeTODO.Model
 
         public Session(IPersistence savePersistence, IPersistence loadPersistence)
         {
+            log.Info("Starting Session");
             _savePersistence = savePersistence;
             _loadPersistence = loadPersistence;
         }
