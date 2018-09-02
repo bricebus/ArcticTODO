@@ -11,9 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.Lib", "Stor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.Lib.Tests", "StormshrikeTODO.Lib.Tests\StormshrikeTODO.Lib.Tests.csproj", "{BC694F72-5BE3-46BD-B97B-F32D04DDEABA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI", "StormshrikeTODO.WebAPI\StormshrikeTODO.WebAPI.csproj", "{FCE47B79-67E9-4882-8C2F-E79F5706065B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI.old", "StormshrikeTODO.WebAPI\StormshrikeTODO.WebAPI.old.csproj", "{FCE47B79-67E9-4882-8C2F-E79F5706065B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebUI", "StormshrikeTODO.WebUI\StormshrikeTODO.WebUI.csproj", "{FD84743D-12D9-4C94-9E42-747846EF63F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI2", "StormshrikeTODO.WebAPI2\StormshrikeTODO.WebAPI2.csproj", "{0495044D-1F57-4726-8D3F-979C97C5FDEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI2.Tests", "StormshrikeTODO.WebAPI2.Tests\StormshrikeTODO.WebAPI2.Tests.csproj", "{2A506A13-790F-4636-BD05-22AC861777F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{FD84743D-12D9-4C94-9E42-747846EF63F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD84743D-12D9-4C94-9E42-747846EF63F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD84743D-12D9-4C94-9E42-747846EF63F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0495044D-1F57-4726-8D3F-979C97C5FDEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0495044D-1F57-4726-8D3F-979C97C5FDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0495044D-1F57-4726-8D3F-979C97C5FDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0495044D-1F57-4726-8D3F-979C97C5FDEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A506A13-790F-4636-BD05-22AC861777F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A506A13-790F-4636-BD05-22AC861777F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A506A13-790F-4636-BD05-22AC861777F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A506A13-790F-4636-BD05-22AC861777F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
