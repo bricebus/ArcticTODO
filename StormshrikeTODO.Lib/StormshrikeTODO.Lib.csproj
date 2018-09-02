@@ -46,6 +46,7 @@
     <Compile Include="src\Model\Context.cs" />
     <Compile Include="src\Model\DefaultContextGenerator.cs" />
     <Compile Include="src\Model\DefinedContexts.cs" />
+    <Compile Include="src\Model\ProjectComparer.cs" />
     <Compile Include="src\Model\Session.cs" />
     <Compile Include="src\Model\Task.cs" />
     <Compile Include="src\Model\TaskComparer.cs" />

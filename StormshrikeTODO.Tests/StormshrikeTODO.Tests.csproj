@@ -79,7 +79,6 @@
     <None Include="Data\SQLite\LoadTestDB.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="src\Persistence\SQLItePersistenceTest.playlist" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\SQLite\Projects-testdata.sql">

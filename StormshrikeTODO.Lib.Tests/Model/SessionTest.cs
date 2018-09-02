@@ -120,7 +120,6 @@ namespace StormshrikeTODO.Tests
             var prj1 = new Project("Test Project1", DateTime.Parse("1/1/2017"));
             var prj2 = new Project("Test Project2", DateTime.Parse("1/1/2018"));
             var task = new Task("Test Task 1.1", DateTime.Parse("7/1/2016"));
-//            prj1.AddTask(task);
             var prjList = new Collection<Project>();
             prjList.Add(prj1);
             prjList.Add(prj2);
@@ -326,6 +325,35 @@ namespace StormshrikeTODO.Tests
             Collection<Project> prjList = GetTestProjectList();
             Session session = LoadTestSession(prjList);
             List<Task> taskList = session.GetTaskList(new Guid());
+        }
+
+        [TestMethod]
+        public void TestRemoveUnusedContext()
+        {
+            Collection<Project> prjList = GetTestProjectList();
+            DefinedContexts dc = GetTestContexts();
+            Session session = LoadTestSession(prjList, dc);
+
+            Context ctx = dc.FindIdByDescr("Home1");
+
+            session.RemoveContext(ctx);
+            Assert.IsNull(session.Contexts.FindIdByDescr("Home1"));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void TestAttemptRemoveUsedContext()
+        {
+            Collection<Project> prjList = GetTestProjectList();
+            DefinedContexts dc = GetTestContexts();
+
+            Context ctx = dc.FindIdByDescr("Home1");
+            prjList[0].TaskList[0].ContextID = ctx.ID;
+
+            Session session = LoadTestSession(prjList, dc);
+
+            // Should throw an exception because the context is being used.
+            session.RemoveContext(ctx);
         }
 
         private DefinedContexts GetTestContexts()

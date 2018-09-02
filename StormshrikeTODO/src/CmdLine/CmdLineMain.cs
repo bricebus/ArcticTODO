@@ -297,13 +297,13 @@ namespace StormshrikeTODO.CmdLine
                             else
                             {
                                 String d = context.Description;
-                                _session.Contexts.Remove(contextID);
+                                _session.RemoveContext(context);
                                 System.Console.Out.WriteLine("Removed Context with ID: '" + contextID + "' Description:'" + d + "'");
                             }
                         }
-                        catch
+                        catch (Exception e)
                         {
-                            System.Console.Out.WriteLine("Error removing Context: '" + contextID + "'");
+                            System.Console.Out.WriteLine("Error removing Context: '" + contextID + "' " + e.Message);
                         }
                     }
                     else if (inputCmd.StartsWith(CHANGE_CONTEXT_CMD))

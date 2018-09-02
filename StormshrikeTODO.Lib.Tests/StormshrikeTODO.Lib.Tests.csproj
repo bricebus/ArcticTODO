@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Model\ContextTest.cs" />
     <Compile Include="Model\DefaultContextGeneratorTest.cs" />
+    <Compile Include="Model\ProjectComparerTest.cs" />
     <Compile Include="Model\ProjectTest.cs" />
     <Compile Include="Model\SessionTest.cs" />
     <Compile Include="Model\DefinedContextsTest.cs" />

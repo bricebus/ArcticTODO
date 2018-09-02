@@ -114,5 +114,30 @@ namespace StormshrikeTODO.Model
             }
             return prj.GetTaskList().OrderBy(t => t.Order).ToList();
         }
+
+        public void RemoveContext(Context ctx)
+        {
+            if (IsContextUsed(ctx))
+            {
+                throw new ArgumentException("Cannot remove a Context that is being used");
+            }
+
+            Contexts.Remove(ctx.ID);
+        }
+
+        private bool IsContextUsed(Context ctx)
+        {
+            foreach (var prj in _projectList)
+            {
+                foreach (var task in prj.TaskList)
+                {
+                    if (task.ContextID == ctx.ID)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

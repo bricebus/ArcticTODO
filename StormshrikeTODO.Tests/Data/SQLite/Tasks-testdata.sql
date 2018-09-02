@@ -1,13 +1,13 @@
 PRAGMA foreign_keys = ON;
 
 INSERT INTO Tasks VALUES("49f184a0-d6bb-44b2-a6e4-cb49559d494e", "Test Task  1.1", "New", "aa790642-9113-4f4e-b0a3-9ac6da26ed76", 1000, "Detail 1.1", NULL, NULL, NULL, "2ad57821-dad5-4e0a-abb4-47d99b314f21", strftime('%Y-%m-%d %H:%M:%f', "2018-01-01 01:30:54"));
-INSERT INTO Tasks VALUES("d34c00e4-bdcb-42a5-88e9-4b8961a543f0", "Test Task  1.2", "Done", "aa790642-9113-4f4e-b0a3-9ac6da26ed76", 2000, "", "", "2018-01-02", NULL, "be17f3e2-764b-43b5-b943-63faf6223863", NULL);
+INSERT INTO Tasks VALUES("d34c00e4-bdcb-42a5-88e9-4b8961a543f0", "Test Task  1.2", "Done", "aa790642-9113-4f4e-b0a3-9ac6da26ed76", 2000, "", "", "2018-01-02", NULL, "be17f3e2-764b-43b5-b943-63faf6223863", strftime('%Y-%m-%d %H:%M:%f', "2018-01-02 02:30:54"));
 INSERT INTO Tasks VALUES("871ba660-c08c-4bf0-9cd5-650c51a968f0", "Test Task  1.3", "InProgress", "aa790642-9113-4f4e-b0a3-9ac6da26ed76", 3000, "", NULL, NULL, "2018-01-03", "f89d513b-c24d-468e-99f3-b841e5ceca6f", strftime('%Y-%m-%d %H:%M:%f', "2018-01-03 03:30:54"));
 INSERT INTO Tasks VALUES("fcbfc3e8-88df-48f5-ae89-80a9ca159113", "Test Task  1.4", "Waiting", "aa790642-9113-4f4e-b0a3-9ac6da26ed76", 4000, "", "2018-01-04", NULL, NULL, "ae7491da-4a83-4cc6-ad26-cd090e81417b", strftime('%Y-%m-%d %H:%M:%f', "2018-01-04 04:30:54"));
 INSERT INTO Tasks VALUES("6d1ac5a8-1e68-4de9-901c-ee426d8ec681", "Test Task  1.5", "NotStarted", "aa790642-9113-4f4e-b0a3-9ac6da26ed76", 5000, "", NULL, NULL, NULL, "c50d02de-d22c-475b-9fef-6e24c05f966b", strftime('%Y-%m-%d %H:%M:%f', "2018-01-05 05:30:54"));
 
 
-INSERT INTO Tasks VALUES("19f6e9eb-1cf6-4416-81b1-e4b42e9d6dfe", "Test Task  2.1", "New", "67345f2b-03af-409e-924c-678b4fc2e19d", 1000, "", NULL, NULL, NULL, "2ad57821-dad5-4e0a-abb4-47d99b314f21", strftime('%Y-%m-%d %H:%M:%f', ""));
+INSERT INTO Tasks VALUES("19f6e9eb-1cf6-4416-81b1-e4b42e9d6dfe", "Test Task  2.1", "New", "67345f2b-03af-409e-924c-678b4fc2e19d", 1000, "", NULL, NULL, NULL, "2ad57821-dad5-4e0a-abb4-47d99b314f21", strftime('%Y-%m-%d %H:%M:%f', "2018-02-01 02:22:23"));
 INSERT INTO Tasks VALUES("56138652-f14a-4a26-bda6-c43976adb414", "Test Task  2.2", "New", "67345f2b-03af-409e-924c-678b4fc2e19d", 2000, "", NULL, NULL, NULL, "be17f3e2-764b-43b5-b943-63faf6223863", strftime('%Y-%m-%d %H:%M:%f', "2018-02-02 02:22:23"));
 INSERT INTO Tasks VALUES("79962192-ad3d-44fc-bf15-cf9de5926dde", "Test Task  2.3", "New", "67345f2b-03af-409e-924c-678b4fc2e19d", 3000, "", NULL, NULL, NULL, "f89d513b-c24d-468e-99f3-b841e5ceca6f", strftime('%Y-%m-%d %H:%M:%f', "2018-02-03 03:22:23"));
 INSERT INTO Tasks VALUES("bd69d3bf-7dbe-4b88-88ca-d44d96b025f8", "Test Task  2.4", "New", "67345f2b-03af-409e-924c-678b4fc2e19d", 4000, "", NULL, NULL, NULL, "ae7491da-4a83-4cc6-ad26-cd090e81417b", strftime('%Y-%m-%d %H:%M:%f', "2018-02-04 04:22:23"));

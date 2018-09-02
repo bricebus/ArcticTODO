@@ -29,6 +29,19 @@ namespace StormshrikeTODO.Tests
         }
 
         [TestMethod]
+        public void TestTaskList_Both_Lists_Null()
+        {
+            List<Task> taskList1 = null;
+            List<Task> taskList2 = null;
+
+            Assert.IsTrue(new TaskComparer().AreListsEquivalent(taskList1, taskList2,
+                out List<Task> chgList, out List<Task> addList, out List<Task> delList));
+            Assert.AreEqual(0, chgList.Count);
+            Assert.AreEqual(0, delList.Count);
+            Assert.AreEqual(0, addList.Count);
+        }
+
+        [TestMethod]
         public void TestTaskList_First_List_Null()
         {
             var taskList1 = TestTaskCreator.SetUpThreeTasksList();

@@ -19,6 +19,11 @@ namespace StormshrikeTODO.Model
             addList = new List<Task>();
             delList = new List<Task>();
 
+            if (taskList1 == null && taskList2 == null)
+            {
+                return true;
+            }
+
             if (taskList1 != null)
             {
                 foreach (var t1 in taskList1)

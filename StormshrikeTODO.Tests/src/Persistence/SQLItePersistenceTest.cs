@@ -8,20 +8,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Task = StormshrikeTODO.Model.Task;
+using System.Threading;
 
 namespace StormshrikeTODO.Tests.Persistence
 {
     [TestClass]
     public class SQLItePersistenceTest
     {
-        private static string _testDbLocation = System.Environment.GetEnvironmentVariable("TEMP")
-            + "\\StormshrikeTest-" + System.Diagnostics.Process.GetCurrentProcess().Id + ".db";
-
-        DateTime _testStartingDateTime = DateTime.Now;
-
-        public static int RunPowershellScript(string ps, string args)
+        private static int RunPowershellScript(string ps, string args)
         {
             int errorLevel;
             ProcessStartInfo processInfo;
@@ -72,42 +66,61 @@ namespace StormshrikeTODO.Tests.Persistence
             return errorLevel;
         }
 
-        [ClassInitialize]
-        public static void Initialize(TestContext testContext)
+        //[ClassInitialize]
+        //public static void Initialize(TestContext testContext)
+        [TestInitialize]
+        public void Initialize()
         {
-            CreateTestDB();
-            LoadTestDataIntoDB();
+            CreateTestDB(GetTestDBLocation());
+            LoadTestDataIntoDB(GetTestDBLocation());
         }
 
-        private static void CreateTestDB()
+        private int GetThreadID()
+        {
+            return Thread.CurrentThread.ManagedThreadId;
+        }
+
+        private string GetTestDBLocation()
+        {
+            return System.Environment.GetEnvironmentVariable("TEMP")
+                + "\\StormshrikeTest-"
+                + System.Diagnostics.Process.GetCurrentProcess().Id
+                + "-"
+                + Thread.CurrentThread.ManagedThreadId
+                + ".db";
+
+        }
+
+        private static void CreateTestDB(string testDbLocation)
         {
             string origCwd = System.IO.Directory.GetCurrentDirectory();
 
             System.IO.Directory.SetCurrentDirectory("..\\..\\..\\StormshrikeTODO\\bin\\Debug\\Data\\SQLite");
-            RunPowershellScript("CreateDB.ps1", "-dblocation \"" + _testDbLocation + "\"");
+            RunPowershellScript("CreateDB.ps1", "-dblocation \"" + testDbLocation + "\"");
             System.IO.Directory.SetCurrentDirectory(origCwd);
-            Assert.IsTrue(System.IO.File.Exists(_testDbLocation), "Cannot find DB file!");
+            Assert.IsTrue(System.IO.File.Exists(testDbLocation), "Cannot find DB file!");
         }
 
-        private static void LoadTestDataIntoDB()
+        private static void LoadTestDataIntoDB(string testDbLocation)
         {
             string origCwd = System.IO.Directory.GetCurrentDirectory();
 
             System.IO.Directory.SetCurrentDirectory("Data\\SQLite");
-            RunPowershellScript("LoadTestDB.ps1", "-dblocation \"" + _testDbLocation + "\"");
+            RunPowershellScript("LoadTestDB.ps1", "-dblocation \"" + testDbLocation + "\"");
             System.IO.Directory.SetCurrentDirectory(origCwd);
         }
 
-        [ClassCleanup]
-        public static void Cleanup()
+        //[ClassCleanup]
+        [TestCleanup]
+        public void Cleanup()
         {
-            System.IO.File.Delete(_testDbLocation);
+            System.IO.File.Delete(GetTestDBLocation());
         }
 
         [TestMethod]
         public void TestLoadContexts()
         {
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 DefinedContexts dc = sqlite.LoadContexts();
                 Assert.AreEqual(6, dc.Count);
@@ -126,17 +139,17 @@ namespace StormshrikeTODO.Tests.Persistence
         {
             DefinedContexts dc = null;
             DefinedContexts dcNew = null;
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 dc = sqlite.LoadContexts();
             }
 
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 sqlite.SaveContexts(dc);
             }
 
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 dcNew = sqlite.LoadContexts();
             }
@@ -149,7 +162,7 @@ namespace StormshrikeTODO.Tests.Persistence
         {
             DefinedContexts dc = null;
             DefinedContexts dcNew = null;
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 dc = sqlite.LoadContexts();
             }
@@ -157,12 +170,12 @@ namespace StormshrikeTODO.Tests.Persistence
             Context ctx = dc.FindIdByID("2ad57821-dad5-4e0a-abb4-47d99b314f21");
             ctx.Description = "Home Office";
 
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 sqlite.SaveContexts(dc);
             }
 
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 dcNew = sqlite.LoadContexts();
                 Assert.AreEqual(6, dcNew.Count);
@@ -174,10 +187,6 @@ namespace StormshrikeTODO.Tests.Persistence
                 Assert.AreEqual("1b9c460b-0287-4011-87fc-0ae0c5f7b81c", dcNew.FindIdByDescr("Manager").ID);
             }
             Assert.IsFalse(DefinedContexts.AreDifferences(dc, dcNew));
-
-            // Reset test DB after changing it
-            CreateTestDB();
-            LoadTestDataIntoDB();
         }
 
         [TestMethod]
@@ -185,19 +194,19 @@ namespace StormshrikeTODO.Tests.Persistence
         {
             DefinedContexts dc = null;
             DefinedContexts dcNew = null;
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 dc = sqlite.LoadContexts();
             }
 
             dc.Remove("1b9c460b-0287-4011-87fc-0ae0c5f7b81c");
 
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 sqlite.SaveContexts(dc);
             }
 
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 dcNew = sqlite.LoadContexts();
                 Assert.AreEqual(5, dcNew.Count);
@@ -208,10 +217,6 @@ namespace StormshrikeTODO.Tests.Persistence
                 Assert.AreEqual("c50d02de-d22c-475b-9fef-6e24c05f966b", dcNew.FindIdByDescr("Phone").ID);
             }
             Assert.IsFalse(DefinedContexts.AreDifferences(dc, dcNew));
-
-            // Reset test DB after changing it
-            CreateTestDB();
-            LoadTestDataIntoDB();
         }
 
         [TestMethod]
@@ -219,19 +224,19 @@ namespace StormshrikeTODO.Tests.Persistence
         {
             DefinedContexts dc = null;
             DefinedContexts dcNew = null;
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 dc = sqlite.LoadContexts();
             }
 
             dc.Add(new Context("b19bce30-96fe-46dc-b408-891a12a3a933", "Weekly Team Meeting"));
 
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 sqlite.SaveContexts(dc);
             }
 
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 dcNew = sqlite.LoadContexts();
                 Assert.AreEqual(7, dcNew.Count);
@@ -244,29 +249,174 @@ namespace StormshrikeTODO.Tests.Persistence
                 Assert.AreEqual("b19bce30-96fe-46dc-b408-891a12a3a933", dcNew.FindIdByDescr("Weekly Team Meeting").ID);
             }
             Assert.IsFalse(DefinedContexts.AreDifferences(dc, dcNew));
+        }
 
-            // Reset test DB after changing it
-            CreateTestDB();
-            LoadTestDataIntoDB();
+        [TestMethod]
+        public void TestSaveProject_ChangedProject()
+        {
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
+            {
+                Collection<Project> prjList = sqlite.LoadProjects();
+
+                var changedID = prjList[0].UniqueID;
+                prjList[0].ProjectName = "Changed Name";
+
+                sqlite.SaveProjects(prjList);
+
+                Collection<Project> prjListNew = sqlite.LoadProjects();
+
+                Assert.IsTrue(ProjectComparer.AreListsEquivalent(prjList, prjListNew,
+                    out List<Project> chgList, out List<Project> addList, out List<Project> delList,
+                    out List<Project> chgTaskList));
+            }
         }
 
         [TestMethod]
         public void TestSaveProject_DeleteProject()
         {
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 Collection<Project> prjList = sqlite.LoadProjects();
 
-            }
+                var removedProjectID = prjList[0].UniqueID;
+                prjList.RemoveAt(0);
 
-            CreateTestDB();
-            LoadTestDataIntoDB();
+                sqlite.SaveProjects(prjList);
+
+                Collection<Project> prjListNew = sqlite.LoadProjects();
+
+                Assert.IsTrue(ProjectComparer.AreListsEquivalent(prjList, prjListNew,
+                    out List<Project> chgList, out List<Project> addList, out List<Project> delList,
+                    out List<Project> chgTaskList));
+
+                // test that tasks tied to the removed project have been deleted from the DB
+                Assert.AreEqual(0, sqlite.LoadTasks(removedProjectID.ToString()).Count);
+            }
+        }
+
+        [TestMethod]
+        public void TestSaveProject_AddTaskToExistingProject()
+        {
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
+            {
+                Collection<Project> prjList = sqlite.LoadProjects();
+                DefinedContexts dc = sqlite.LoadContexts();
+
+                var prjIDWithNewTask = prjList[0].UniqueID;
+                var newTask = new Task("New Task")
+                {
+                    ContextID = dc.FindIdByDescr("Home").ID
+                };
+                prjList[0].AddTask(newTask);
+
+                sqlite.SaveProjects(prjList);
+
+                Collection<Project> prjListNew = sqlite.LoadProjects();
+
+                Assert.IsTrue(ProjectComparer.AreListsEquivalent(prjList, prjListNew,
+                    out List<Project> chgList, out List<Project> addList, out List<Project> delList,
+                    out List<Project> chgTaskList));
+                Assert.IsNotNull(prjListNew[0].TaskList.Where(t => t.UniqueID == newTask.UniqueID).First());
+            }
+        }
+
+        [TestMethod]
+        public void TestSaveProject_ChangeExistingTask()
+        {
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
+            {
+                Collection<Project> prjList = sqlite.LoadProjects();
+                DefinedContexts dc = sqlite.LoadContexts();
+
+                var changedTask = prjList[2].TaskList[4].UniqueID;
+                prjList[2].TaskList[4].Details = "New details";
+
+                sqlite.SaveProjects(prjList);
+
+                Collection<Project> prjListNew = sqlite.LoadProjects();
+
+                Assert.IsTrue(ProjectComparer.AreListsEquivalent(prjList, prjListNew,
+                    out List<Project> chgList, out List<Project> addList, out List<Project> delList,
+                    out List<Project> chgTaskList));
+                Assert.AreEqual("New details", prjListNew[2].TaskList.Where(t => t.UniqueID == changedTask).First().Details);
+            }
+        }
+
+        [TestMethod]
+        public void TestSaveProject_DeleteExistingTask()
+        {
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
+            {
+                Collection<Project> prjList = sqlite.LoadProjects();
+                DefinedContexts dc = sqlite.LoadContexts();
+
+                var deletedTask = prjList[3].TaskList[1].UniqueID;
+                prjList[3].TaskList.RemoveAt(1);
+
+                sqlite.SaveProjects(prjList);
+
+                Collection<Project> prjListNew = sqlite.LoadProjects();
+
+                Assert.IsTrue(ProjectComparer.AreListsEquivalent(prjList, prjListNew,
+                    out List<Project> chgList, out List<Project> addList, out List<Project> delList,
+                    out List<Project> chgTaskList));
+                Assert.AreEqual(0, prjListNew[3].TaskList.Where(t => t.UniqueID == deletedTask).Count());
+            }
+        }
+
+        [TestMethod]
+        public void TestSaveProject_AddProject_NoTasks()
+        {
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
+            {
+                Collection<Project> prjList = sqlite.LoadProjects();
+
+                var removedProjectID = prjList[0].UniqueID;
+                var newProject = new Project("New Test Project");
+                prjList.Add(newProject);
+
+                sqlite.SaveProjects(prjList);
+
+                Collection<Project> prjListNew = sqlite.LoadProjects();
+
+                Assert.IsTrue(ProjectComparer.AreListsEquivalent(prjList, prjListNew,
+                    out List<Project> chgList, out List<Project> addList, out List<Project> delList,
+                    out List<Project> chgTaskList));
+            }
+        }
+
+        [TestMethod]
+        public void TestSaveProject_AddProject_WithTasks()
+        {
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
+            {
+                Collection<Project> prjList = sqlite.LoadProjects();
+                DefinedContexts dc = sqlite.LoadContexts();
+
+                var removedProjectID = prjList[0].UniqueID;
+                var newProject = new Project("New Test Project");
+                var newTask = new Task("New Task")
+                {
+                    ContextID = dc.FindIdByDescr("Home").ID
+                };
+                newProject.AddTask(newTask);
+                prjList.Add(newProject);
+
+                sqlite.SaveProjects(prjList);
+
+                Collection<Project> prjListNew = sqlite.LoadProjects();
+
+                Assert.IsTrue(ProjectComparer.AreListsEquivalent(prjList, prjListNew,
+                    out List<Project> chgList, out List<Project> addList, out List<Project> delList,
+                    out List<Project> chgTaskList));
+                Assert.IsTrue(prjListNew[10].TaskList.Select(t => t.UniqueID == newTask.UniqueID).First());
+            }
         }
 
         [TestMethod]
         public void TestLoadProjects()
         {
-            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(_testDbLocation)))
+            using (SQLitePersistence sqlite = new SQLitePersistence(new SQLitePersistenceConfig(GetTestDBLocation())))
             {
                 Collection<Project> prjList = sqlite.LoadProjects();
                 Assert.AreEqual(10, prjList.Count);
@@ -295,7 +445,7 @@ namespace StormshrikeTODO.Tests.Persistence
                 Assert.AreEqual("", t1_2.Details);
                 Assert.AreEqual(2000, t1_2.Order);
                 Assert.AreEqual(Model.Task.StatusEnum.Done, t1_2.Status);
-                Assert.IsTrue(_testStartingDateTime <= t1_2.DateTimeCreated);
+                Assert.AreEqual(DateTime.Parse("2018-01-02 02:30:54"), t1_2.DateTimeCreated);
                 Assert.IsTrue(DateTime.Now >= t1_2.DateTimeCreated);
                 Assert.AreEqual(null, t1_2.DateDue);
                 Assert.AreEqual(DateTime.Parse("2018-01-02"), t1_2.DateCompleted);
