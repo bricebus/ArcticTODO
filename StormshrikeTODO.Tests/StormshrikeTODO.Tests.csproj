@@ -73,7 +73,7 @@
       <Project>{f0a4748a-8dec-47e2-be9f-83c80ec5390a}</Project>
       <Name>StormshrikeTODO.Lib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StormshrikeTODO\StormshrikeTODO.CmdLine.csproj">
+    <ProjectReference Include="..\StormshrikeTODO.CmdLine\StormshrikeTODO.CmdLine.csproj">
       <Project>{1623CCF3-F2CD-43ED-AF29-7B07C63E0B75}</Project>
       <Name>StormshrikeTODO.CmdLine</Name>
     </ProjectReference>
