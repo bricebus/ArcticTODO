@@ -1,4 +1,5 @@
 ﻿using StormshrikeTODO.Model;
+using StormshrikeTODO.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,45 +11,69 @@ namespace StormshrikeTODO.WebAPI.Controllers
 {
     public class ProjectsController : ApiController
     {
-        ProjectApi[] projects = new ProjectApi[] 
-        { 
-            new ProjectApi("Test Projecgt 1"),
-            new ProjectApi("Test Projecgt 2"),
-            new ProjectApi("Test Projecgt 3")
-        };
+        //private ProjectApi[] projects = new ProjectApi[]
+        //{
+        //    new ProjectApi("Test Project 1.1c", "8e2498a5-4f73-4378-a265-eeaa2610f28c"),
+        //    new ProjectApi("Test Project 2.1c", "d4d5f228-bf22-4501-ab8b-0f1d40f85569"),
+        //    new ProjectApi("Test Project 3.1c", "5988c4c8-2fca-4612-850c-203c45eccdeb"),
+        //};
 
-        public IEnumerable<ProjectApi> GetAllProject()
+        private IPersistence _persistence;
+
+        public ProjectsController(IPersistence persistence)
         {
+            _persistence = persistence;
+        }
+
+        public IEnumerable<ProjectApi> GetAllProjects()
+        {
+            return GetProjectApiList();
+        }
+
+        private List<ProjectApi> GetProjectApiList()
+        {
+
+            var projects = new List<ProjectApi>();
+            var prjList = _persistence.LoadProjects();
+            foreach (var prj in prjList)
+            {
+                projects.Add(new ProjectApi(prj));
+            }
+
             return projects;
         }
 
         public IHttpActionResult GetProject(string id)
         {
-            if (id != "afdlh")
-            {
-                throw new ArgumentException("invalid id");
-            }
-
-            var product = projects.FirstOrDefault((p) => p.UniqueID.ToString() == id);
-            if (product == null)
+            List<ProjectApi> prjList = GetProjectApiList();
+            var prj = prjList.FirstOrDefault((p) => p.UniqueID.ToString() == id);
+            if (prj == null)
             {
                 return NotFound();
             }
-            return Ok(product);
+            return Ok(prj);
         }
     }
 
     public class ProjectApi
     {
         public string UniqueID { get; set; }
-
         public string ProjectName { get; set; }
+        public DateTime? DueDate { get; set; }
+        public DateTime DateTimeCreated { get; set; }
 
-        public ProjectApi(string name)
+        public ProjectApi(Project prj)
         {
-            this.ProjectName = name;
-            this.UniqueID = Guid.NewGuid().ToString();
+            ProjectName = prj.ProjectName;
+            UniqueID = prj.UniqueID.ToString();
+            DueDate = prj.DueDate;
+            DateTimeCreated = prj.DateTimeCreated;
         }
 
+        public ProjectApi(string name, string id)
+        {
+            ProjectName = name;
+            UniqueID = id;
+        }
     }
 }

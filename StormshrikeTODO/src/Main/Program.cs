@@ -27,7 +27,6 @@ namespace StormshrikeTODO
             handler = new ConsoleEventDelegate(ConsoleEventCallback);
             SetConsoleCtrlHandler(handler, true);
 
-
             IKernel kernel = new StandardKernel(new Bindings());
 
             var session = kernel.Get<Session>();

@@ -17,7 +17,8 @@ namespace StormshrikeTODO.Persistence
             DbFileLocation = dbLocation;
         }
 
-        public string DbFileLocation { get; private set; } = System.Environment.GetEnvironmentVariable("TEMP") + "\\Stormshrike.db";
+        //public string DbFileLocation { get; private set; } = System.Environment.GetEnvironmentVariable("TEMP") + "\\Stormshrike.db";
+        public string DbFileLocation { get; private set; } = "C:\\Temp\\Stormshrike.db";
     }
 
 }

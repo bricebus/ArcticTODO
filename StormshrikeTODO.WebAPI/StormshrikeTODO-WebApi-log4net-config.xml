@@ -9,8 +9,9 @@
     </appender>
 
      <appender name="RollingFile" type="log4net.Appender.RollingFileAppender">
-        <file value="${TEMP}\StormshrikeTODO.log" />
-        <!--<file type="log4net.Util.PatternString" value="${TEMP}\StormshrikeTODO-ConsoleUI-%processid.log" />-->-->
+        <!--<file value="${TEMP}\StormshrikeTODO-WebAPI.log" />-->
+        <file value="C:\Temp\StormshrikeTODO-WebAPI.log" />
+        <!--<file type="log4net.Util.PatternString" value="${TEMP}\StormshrikeTODO-WebAPI-%processid.log" />-->-->
         <appendToFile value="true" />
         <maximumFileSize value="100KB" />
         <maxSizeRollBackups value="2" />

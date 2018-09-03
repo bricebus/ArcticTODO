@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace StormshrikeTODO.WebAPI2.Tests
+namespace StormshrikeTODO.WebAPI.Tests
 {
     [TestClass]
     public class UnitTest1
