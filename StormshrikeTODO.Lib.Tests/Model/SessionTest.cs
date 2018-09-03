@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Moq;
-using StormshrikeTODO.Persistence;
 using System.Collections.ObjectModel;
 using StormshrikeTODO.Model.Tests;
 

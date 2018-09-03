@@ -1,11 +1,11 @@
 ﻿using Ninject.Modules;
 using Ninject;
-using StormshrikeTODO.Persistence;
+using StormshrikeTODO.Data;
 using StormshrikeTODO.Model;
 
 namespace StormshrikeTODO
 {
-    public class Bindings : NinjectModule
+    public class CmdLineBindings : NinjectModule
     {
         public override void Load()
         {

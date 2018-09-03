@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StormshrikeTODO.Model;
-using StormshrikeTODO.Persistence;
+using StormshrikeTODO.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -95,7 +95,7 @@ namespace StormshrikeTODO.Tests.Persistence
         {
             string origCwd = System.IO.Directory.GetCurrentDirectory();
 
-            System.IO.Directory.SetCurrentDirectory("..\\..\\..\\StormshrikeTODO\\bin\\Debug\\Data\\SQLite");
+            System.IO.Directory.SetCurrentDirectory("..\\..\\..\\StormshrikeTODO.Data\\bin\\Debug\\scripts\\SQLite");
             RunPowershellScript("CreateDB.ps1", "-dblocation \"" + testDbLocation + "\"");
             System.IO.Directory.SetCurrentDirectory(origCwd);
             Assert.IsTrue(System.IO.File.Exists(testDbLocation), "Cannot find DB file!");

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StormshrikeTODO.Model;
-using StormshrikeTODO.Persistence;
+using StormshrikeTODO.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

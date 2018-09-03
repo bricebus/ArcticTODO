@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using StormshrikeTODO.Model;
 using System.Collections.ObjectModel;
 
-namespace StormshrikeTODO.Persistence
+namespace StormshrikeTODO.Model
 {
     public interface IPersistence
     {

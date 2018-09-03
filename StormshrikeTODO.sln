@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO", "StormshrikeTODO\StormshrikeTODO.csproj", "{1623CCF3-F2CD-43ED-AF29-7B07C63E0B75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.CmdLine", "StormshrikeTODO\StormshrikeTODO.CmdLine.csproj", "{1623CCF3-F2CD-43ED-AF29-7B07C63E0B75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.Tests", "StormshrikeTODO.Tests\StormshrikeTODO.Tests.csproj", "{6A844F8A-FCAA-4A6A-97C2-8EF47769FF58}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI", "StormshrikeTODO.WebAPI\StormshrikeTODO.WebAPI.csproj", "{0495044D-1F57-4726-8D3F-979C97C5FDEF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI.Tests", "StormshrikeTODO.WebAPI.Tests\StormshrikeTODO.WebAPI.Tests.csproj", "{2A506A13-790F-4636-BD05-22AC861777F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.Data", "StormshrikeTODO.Data\StormshrikeTODO.Data.csproj", "{EFE93507-3470-4247-8338-365148E0FA88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{2A506A13-790F-4636-BD05-22AC861777F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A506A13-790F-4636-BD05-22AC861777F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A506A13-790F-4636-BD05-22AC861777F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFE93507-3470-4247-8338-365148E0FA88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFE93507-3470-4247-8338-365148E0FA88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFE93507-3470-4247-8338-365148E0FA88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFE93507-3470-4247-8338-365148E0FA88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

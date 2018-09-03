@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using log4net;
 using StormshrikeTODO.Model;
-using StormshrikeTODO.Persistence;
+using StormshrikeTODO.Data;
 
 
 namespace StormshrikeTODO.CmdLine

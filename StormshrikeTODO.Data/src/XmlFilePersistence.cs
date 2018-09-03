@@ -1,4 +1,4 @@
-﻿using StormshrikeTODO.Persistence;
+﻿using StormshrikeTODO.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ using StormshrikeTODO.Model;
 using System.IO;
 using System.Collections.ObjectModel;
 
-namespace StormshrikeTODO.Persistence
+namespace StormshrikeTODO.Data
 {
     public class XmlFilePersistence : IPersistence
     {

@@ -1,6 +1,5 @@
 ﻿using log4net;
 using StormshrikeTODO.Model;
-using StormshrikeTODO.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;

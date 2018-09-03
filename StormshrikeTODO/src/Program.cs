@@ -50,12 +50,11 @@ namespace StormshrikeTODO
             handler = new ConsoleEventDelegate(ConsoleEventCallback);
             SetConsoleCtrlHandler(handler, true);
 
-            IKernel kernel = new StandardKernel(new Bindings());
+            IKernel kernel = new StandardKernel(new CmdLineBindings());
 
             var session = kernel.Get<Session>();
 
-            //var cmdlineStatus = new CmdLineMain(session).Start(args);
-            var cmdlineStatus = 0;
+            var cmdlineStatus = new CmdLineMain(session).Start(args);
 
             log.Info("Exiting StormshrikeTODO with status " + cmdlineStatus);
             return cmdlineStatus;

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StormshrikeTODO.Persistence
+namespace StormshrikeTODO.Data
 {
     public class SQLitePersistenceConfig
     {
