@@ -63,9 +63,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StormshrikeTODO.WebAPI\StormshrikeTODO.WebAPI2.csproj">
+    <ProjectReference Include="..\StormshrikeTODO.WebAPI\StormshrikeTODO.WebAPI.csproj">
       <Project>{0495044D-1F57-4726-8D3F-979C97C5FDEF}</Project>
-      <Name>StormshrikeTODO.WebAPI2</Name>
+      <Name>StormshrikeTODO.WebAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

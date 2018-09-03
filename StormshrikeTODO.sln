@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI.old"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebUI", "StormshrikeTODO.WebUI\StormshrikeTODO.WebUI.csproj", "{FD84743D-12D9-4C94-9E42-747846EF63F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI2", "StormshrikeTODO.WebAPI\StormshrikeTODO.WebAPI2.csproj", "{0495044D-1F57-4726-8D3F-979C97C5FDEF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI", "StormshrikeTODO.WebAPI\StormshrikeTODO.WebAPI.csproj", "{0495044D-1F57-4726-8D3F-979C97C5FDEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI2.Tests", "StormshrikeTODO.WebAPI2.Tests\StormshrikeTODO.WebAPI2.Tests.csproj", "{2A506A13-790F-4636-BD05-22AC861777F3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.WebAPI.Tests", "StormshrikeTODO.WebAPI.Tests\StormshrikeTODO.WebAPI.Tests.csproj", "{2A506A13-790F-4636-BD05-22AC861777F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
