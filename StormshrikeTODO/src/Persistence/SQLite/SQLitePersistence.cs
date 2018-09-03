@@ -10,7 +10,7 @@ namespace StormshrikeTODO.Persistence
 {
     public class SQLitePersistence : IPersistence, IDisposable
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SQLitePersistence));
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         SQLiteConnectionStringBuilder _connStrBuilder;
         public SQLitePersistence(SQLitePersistenceConfig config)
@@ -99,7 +99,7 @@ namespace StormshrikeTODO.Persistence
 
         public Collection<Task> LoadTasks(string prjID)
         {
-            log.Info("Loading Tasks for Project: " + prjID);
+            log.Debug("Loading Tasks for Project: " + prjID);
 
             Collection<Task> taskCollection = new Collection<Task>();
             using (SQLiteConnection db = new SQLiteConnection(_connStrBuilder.ConnectionString))
@@ -140,7 +140,7 @@ namespace StormshrikeTODO.Persistence
                 }
                 db.Close();
             }
-            log.Info("Done loading Tasks for Project: " + prjID);
+            log.Debug("Done loading Tasks for Project: " + prjID);
             return taskCollection;
         }
 

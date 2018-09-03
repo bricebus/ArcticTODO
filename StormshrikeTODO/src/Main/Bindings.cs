@@ -3,13 +3,16 @@ using Ninject;
 using StormshrikeTODO.Persistence;
 using StormshrikeTODO.Model;
 
-public class Bindings : NinjectModule
+namespace StormshrikeTODO
 {
-    public override void Load()
+    public class Bindings : NinjectModule
     {
-        Bind<Session>().To<Session>();
-        //Bind<IPersistence>().To<BinFilePersistence>();
-        //Bind<IPersistence>().To<XmlFilePersistence>();
-        Bind<IPersistence>().To<SQLitePersistence>();
+        public override void Load()
+        {
+            Bind<Session>().To<Session>();
+            //Bind<IPersistence>().To<BinFilePersistence>();
+            //Bind<IPersistence>().To<XmlFilePersistence>();
+            Bind<IPersistence>().To<SQLitePersistence>();
+        }
     }
 }

@@ -11,8 +11,6 @@ namespace StormshrikeTODO.Model
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private IPersistence _savePersistence;
-        private IPersistence _loadPersistence;
         private IPersistence _persistence;
 
         private Collection<Project> _projectList;
@@ -26,25 +24,16 @@ namespace StormshrikeTODO.Model
         {
             log.Info("Starting Session");
             _persistence = persistence;
-            _savePersistence = persistence;
-            _loadPersistence = persistence;
-        }
-
-        public Session(IPersistence savePersistence, IPersistence loadPersistence)
-        {
-            log.Info("Starting Session");
-            _savePersistence = savePersistence;
-            _loadPersistence = loadPersistence;
         }
 
         public void LoadContexts()
         {
-            this.Contexts = _loadPersistence.LoadContexts();
+            this.Contexts = _persistence.LoadContexts();
         }
 
         public void LoadProjects()
         {
-            _projectList = _loadPersistence.LoadProjects();
+            _projectList = _persistence.LoadProjects();
             SetTaskOrderIncrement();
         }
 
@@ -52,8 +41,8 @@ namespace StormshrikeTODO.Model
         {
             SetTaskOrderIncrement();
 
-            _savePersistence.SaveProjects(_projectList);
-            _savePersistence.SaveContexts(this.Contexts);
+            _persistence.SaveProjects(_projectList);
+            _persistence.SaveContexts(this.Contexts);
         }
 
         private void SetTaskOrderIncrement()

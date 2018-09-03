@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using log4net;
 using log4net.Config;
 using Ninject;
@@ -9,7 +10,7 @@ namespace StormshrikeTODO
 {
     class StormshrikeTODO
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(StormshrikeTODO));
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         static ConsoleEventDelegate handler;   // Keeps it from getting garbage collected
 
@@ -21,8 +22,30 @@ namespace StormshrikeTODO
 
         static int Main(string[] args)
         {
-            XmlConfigurator.Configure(new System.IO.FileInfo("StormshrikeTODO-log4net-config.xml"));
+            var loggingConfigFile = System.Environment.GetEnvironmentVariable("STORMSHRIKETODO_LOGGING_CONFIG_CMDLINE");
+            if (String.IsNullOrEmpty(loggingConfigFile))
+            {
+                loggingConfigFile = System.Environment.GetEnvironmentVariable("STORMSHRIKETODO_LOGGING_CONFIG");
+            }
+
+            if (String.IsNullOrEmpty(loggingConfigFile))
+            {
+                loggingConfigFile = "logging-config-cmdline.xml";
+            }
+
+            var dbLoggingOutputDir = System.Environment.GetEnvironmentVariable("STORMSHRIKETODO_LOGGING_OUTPUT_DIR");
+            if (String.IsNullOrEmpty(dbLoggingOutputDir))
+            {
+                var tempDir = System.Environment.GetEnvironmentVariable("TEMP");
+                dbLoggingOutputDir = tempDir;
+            }
+
+
+            System.Environment.SetEnvironmentVariable("STORMSHRIKETODO_LOG_DIR", dbLoggingOutputDir);
+
+            XmlConfigurator.Configure(new System.IO.FileInfo(loggingConfigFile));
             log.Info("Starting StormshrikeTODO");
+            log.Debug("Using logging config file: " + loggingConfigFile);
 
             handler = new ConsoleEventDelegate(ConsoleEventCallback);
             SetConsoleCtrlHandler(handler, true);
@@ -31,7 +54,8 @@ namespace StormshrikeTODO
 
             var session = kernel.Get<Session>();
 
-            var cmdlineStatus = new CmdLineMain(session).Start(args);
+            //var cmdlineStatus = new CmdLineMain(session).Start(args);
+            var cmdlineStatus = 0;
 
             log.Info("Exiting StormshrikeTODO with status " + cmdlineStatus);
             return cmdlineStatus;

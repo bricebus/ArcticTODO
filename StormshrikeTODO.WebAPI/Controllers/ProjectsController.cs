@@ -1,4 +1,5 @@
-﻿using StormshrikeTODO.Model;
+﻿using log4net;
+using StormshrikeTODO.Model;
 using StormshrikeTODO.Persistence;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace StormshrikeTODO.WebAPI.Controllers
 {
     public class ProjectsController : ApiController
     {
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         //private ProjectApi[] projects = new ProjectApi[]
         //{
         //    new ProjectApi("Test Project 1.1c", "8e2498a5-4f73-4378-a265-eeaa2610f28c"),
@@ -22,17 +24,33 @@ namespace StormshrikeTODO.WebAPI.Controllers
 
         public ProjectsController(IPersistence persistence)
         {
+            log.Info("Starting ProjectsController");
             _persistence = persistence;
         }
 
         public IEnumerable<ProjectApi> GetAllProjects()
         {
+            log.Debug("ProjectsController.GetAllProjects");
             return GetProjectApiList();
+        }
+
+        public IHttpActionResult GetProject(string id)
+        {
+            log.Debug("ProjectsController.GetProject:" + id);
+            List<ProjectApi> prjList = GetProjectApiList();
+            var prj = prjList.FirstOrDefault((p) => p.UniqueID.ToString() == id);
+            if (prj == null)
+            {
+                log.Debug("Project " + id + " not found");
+                return NotFound();
+            }
+            log.Debug("Project " + id + " found");
+            return Ok(prj);
         }
 
         private List<ProjectApi> GetProjectApiList()
         {
-
+            log.Debug("Loading project list");
             var projects = new List<ProjectApi>();
             var prjList = _persistence.LoadProjects();
             foreach (var prj in prjList)
@@ -40,18 +58,8 @@ namespace StormshrikeTODO.WebAPI.Controllers
                 projects.Add(new ProjectApi(prj));
             }
 
+            log.Debug("Done loading project list");
             return projects;
-        }
-
-        public IHttpActionResult GetProject(string id)
-        {
-            List<ProjectApi> prjList = GetProjectApiList();
-            var prj = prjList.FirstOrDefault((p) => p.UniqueID.ToString() == id);
-            if (prj == null)
-            {
-                return NotFound();
-            }
-            return Ok(prj);
         }
     }
 

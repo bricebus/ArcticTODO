@@ -92,7 +92,7 @@
     <Content Include="Data\SQLite\Tasks.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="StormshrikeTODO-log4net-config.xml">
+    <Content Include="logging-config-cmdline.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
