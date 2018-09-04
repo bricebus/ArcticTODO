@@ -56,8 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\CmdLineMain.cs" />
-    <Compile Include="src\CmdLineBindings.cs" />
+    <Compile Include="src\CmdLineProcessor.cs" />
+    <Compile Include="src\CmdLineNinjectBindings.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

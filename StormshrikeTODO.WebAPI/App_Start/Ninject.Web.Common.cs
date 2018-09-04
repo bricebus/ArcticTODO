@@ -40,7 +40,7 @@ namespace StormshrikeTODO.WebAPI.App_Start
         /// <returns>The created kernel.</returns>
         private static IKernel CreateKernel()
         {
-            var kernel = new StandardKernel(new WebAPIBindings());
+            var kernel = new StandardKernel(new WebApiNinjectBindings());
             try
             {
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);

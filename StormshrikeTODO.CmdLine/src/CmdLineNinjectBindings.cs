@@ -5,7 +5,7 @@ using StormshrikeTODO.Model;
 
 namespace StormshrikeTODO
 {
-    public class CmdLineBindings : NinjectModule
+    public class CmdLineNinjectBindings : NinjectModule
     {
         public override void Load()
         {

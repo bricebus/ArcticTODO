@@ -117,7 +117,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\WebAPIBindings.cs" />
+    <Compile Include="App_Start\WebApiNinjectBindings.cs" />
     <Compile Include="App_Start\Ninject.Web.Common.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />

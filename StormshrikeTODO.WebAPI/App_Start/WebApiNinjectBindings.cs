@@ -5,7 +5,7 @@ using StormshrikeTODO.Model;
 
 namespace StormshrikeTODO.WebAPI.App_Start
 {
-    public class WebAPIBindings : NinjectModule
+    public class WebApiNinjectBindings : NinjectModule
     {
         public override void Load()
         {

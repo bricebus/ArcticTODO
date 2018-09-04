@@ -8,7 +8,7 @@ using StormshrikeTODO.Data;
 
 namespace StormshrikeTODO.CmdLine
 {
-    public class CmdLineMain
+    public class CmdLineProcessor
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -50,7 +50,7 @@ namespace StormshrikeTODO.CmdLine
         private Project _openProject = null;
         private Task _openTask = null;
 
-        public CmdLineMain(Session session)
+        public CmdLineProcessor(Session session)
         {
             _session = session;
         }
@@ -62,14 +62,16 @@ namespace StormshrikeTODO.CmdLine
             {
                 try
                 {
-                    System.Console.Out.Write("StormshrikeTODO> ");
+                    log.Debug("Waiting for user input...");
+                    Write("StormshrikeTODO> ");
                     String inputCmd = System.Console.In.ReadLine();
     
+                    log.Debug("Input='" + inputCmd + "'");
                     if (inputCmd.StartsWith(NEW_PROJECT_CMD))
                     {
                         if (!_session.Initialized)
                         {
-                            System.Console.Out.WriteLine("Data not initialized!");
+                            WriteError("Data not initialized!");
                             continue;
                         }
     
@@ -96,21 +98,21 @@ namespace StormshrikeTODO.CmdLine
                         _openProject = _session.FindProjectByID(prjID);
                        if (_openProject == null)
                         {
-                            System.Console.Out.WriteLine("Project not found!");
+                            WriteError("Project not found!");
                         }
                     }
                     else if (inputCmd.StartsWith(CHANGE_PRJ_NAME_CMD))
                     {
                         if (_openProject == null)
                         {
-                            System.Console.Out.WriteLine("No open project");
+                            WriteError("No open project");
                             continue;
                         }
     
                         String newName = inputCmd.Substring(CHANGE_PRJ_NAME_CMD.Length).Trim();
                         if (String.IsNullOrEmpty(newName))
                         {
-                            System.Console.Out.WriteLine("New Name is blank!");
+                            WriteError("New Name is blank!");
                         }
                         else
                         {
@@ -121,14 +123,14 @@ namespace StormshrikeTODO.CmdLine
                     {
                         if (!AreProjectAndTaskOpen(out string errmsg))
                         {
-                            System.Console.Out.WriteLine(errmsg);
+                            WriteError(errmsg);
                             continue;
                         }
 
                         String newDetails = inputCmd.Substring(CHANGE_TASK_DETAILS_CMD.Length).Trim();
                         if (String.IsNullOrEmpty(newDetails))
                         {
-                            System.Console.Out.WriteLine("New Details are blank!");
+                            WriteError("New Details are blank!");
                         }
                         else
                         {
@@ -139,19 +141,19 @@ namespace StormshrikeTODO.CmdLine
                     {
                         if (!AreProjectAndTaskOpen(out string errmsg))
                         {
-                            System.Console.Out.WriteLine(errmsg);
+                            WriteError(errmsg);
                             continue;
                         }
 
                         String newContextID = inputCmd.Substring(CHANGE_TASK_CONTEXT_CMD.Length).Trim();
                         if (String.IsNullOrEmpty(newContextID))
                         {
-                            System.Console.Out.WriteLine("New ContextID is blank!");
+                            WriteError("New ContextID is blank!");
                         }
 
                         if (!IsValidContext(newContextID))
                         {
-                            System.Console.Out.WriteLine("Cannot find Context with ID: '" + newContextID + "'");
+                            WriteError("Cannot find Context with ID: '" + newContextID + "'");
                         }
                         else
                         {
@@ -162,7 +164,7 @@ namespace StormshrikeTODO.CmdLine
                     {
                         if (!AreProjectAndTaskOpen(out string errmsg))
                         {
-                            System.Console.Out.WriteLine(errmsg);
+                            WriteError(errmsg);
                             continue;
                         }
 
@@ -173,7 +175,7 @@ namespace StormshrikeTODO.CmdLine
                     {
                         if (!AreProjectAndTaskOpen(out string errmsg))
                         {
-                            System.Console.Out.WriteLine(errmsg);
+                            WriteError(errmsg);
                             continue;
                         }
 
@@ -185,14 +187,14 @@ namespace StormshrikeTODO.CmdLine
                         }
                         catch
                         {
-                            System.Console.Out.WriteLine("Invalid Status: '" + statusStr + "'");
+                            WriteError("Invalid Status: '" + statusStr + "'");
                         }
                     }
                     else if (inputCmd.StartsWith(MOVE_TASK_FIRST_CMD))
                     {
                         if (!AreProjectAndTaskOpen(out string errmsg))
                         {
-                            System.Console.Out.WriteLine(errmsg);
+                            WriteError(errmsg);
                             continue;
                         }
 
@@ -202,7 +204,7 @@ namespace StormshrikeTODO.CmdLine
                     {
                         if (!AreProjectAndTaskOpen(out string errmsg))
                         {
-                            System.Console.Out.WriteLine(errmsg);
+                            WriteError(errmsg);
                             continue;
                         }
 
@@ -212,7 +214,7 @@ namespace StormshrikeTODO.CmdLine
                     {
                         if (!AreProjectAndTaskOpen(out string errmsg))
                         {
-                            System.Console.Out.WriteLine(errmsg);
+                            WriteError(errmsg);
                             continue;
                         }
 
@@ -222,7 +224,7 @@ namespace StormshrikeTODO.CmdLine
                     {
                         if (!AreProjectAndTaskOpen(out string errmsg))
                         {
-                            System.Console.Out.WriteLine(errmsg);
+                            WriteError(errmsg);
                             continue;
                         }
 
@@ -242,19 +244,17 @@ namespace StormshrikeTODO.CmdLine
                             {
                                 if (ex is System.FormatException)
                                 {
-                                    System.Console.Out.WriteLine("Invalid Date: " + newDueDateStr + " " +
-                                        ex.Message);
+                                    WriteError("Invalid Date: " + newDueDateStr, ex);
                                 }
                                 else
                                 {
-                                    System.Console.Out.WriteLine("Error changing Due Date: " +
-                                        newDueDateStr + " " + ex.Message);
+                                    WriteError("Error changing Due Date: " + newDueDateStr, ex);
                                 }
                             }
                         }
                         else
                         {
-                            System.Console.Out.WriteLine("No open project");
+                            WriteError("No open project");
                         }
     
                     }
@@ -266,11 +266,11 @@ namespace StormshrikeTODO.CmdLine
                             if (String.IsNullOrEmpty(newContextDescr))
                             {
 
-                                System.Console.Out.WriteLine("Context is blank");
+                                WriteError("Context is blank");
                             }
                             else if (_session.Contexts.FindIdByDescr(newContextDescr) != null)
                             {
-                                System.Console.Out.WriteLine("Context already exists: '" + newContextDescr + "'");
+                                WriteError("Context already exists: '" + newContextDescr + "'");
                             }
                             else
                             {
@@ -280,7 +280,7 @@ namespace StormshrikeTODO.CmdLine
                         }
                         catch
                         {
-                            System.Console.Out.WriteLine("Error adding Context: '" + newContextDescr + "'");
+                            WriteError("Error adding Context: '" + newContextDescr + "'");
                         }
                     }
                     else if (inputCmd.StartsWith(REMOVE_CONTEXT_CMD))
@@ -292,22 +292,22 @@ namespace StormshrikeTODO.CmdLine
                             if (String.IsNullOrEmpty(contextID))
                             {
 
-                                System.Console.Out.WriteLine("Context ID is blank");
+                                WriteError("Context ID is blank");
                             }
                             else if (context == null)
                             {
-                                System.Console.Out.WriteLine("Cannot find Context with ID: '" + contextID + "'");
+                                WriteError("Cannot find Context with ID: '" + contextID + "'");
                             }
                             else
                             {
                                 String d = context.Description;
                                 _session.RemoveContext(context);
-                                System.Console.Out.WriteLine("Removed Context with ID: '" + contextID + "' Description:'" + d + "'");
+                                WriteInfo("Removed Context with ID: '" + contextID + "' Description:'" + d + "'");
                             }
                         }
-                        catch (Exception e)
+                        catch (Exception ex)
                         {
-                            System.Console.Out.WriteLine("Error removing Context: '" + contextID + "' " + e.Message);
+                            WriteError("Error removing Context: '" + contextID, ex);
                         }
                     }
                     else if (inputCmd.StartsWith(CHANGE_CONTEXT_CMD))
@@ -320,7 +320,7 @@ namespace StormshrikeTODO.CmdLine
 
                             if (split.Length != 2)
                             {
-                                System.Console.Out.WriteLine("Invalid command: '" + cmd + "'");
+                                WriteError("Invalid command: '" + cmd + "'");
                                 continue;
                             }
 
@@ -330,17 +330,17 @@ namespace StormshrikeTODO.CmdLine
 
                             if (String.IsNullOrEmpty(id))
                             {
-                                System.Console.Out.WriteLine("Context ID is blank");
+                                WriteError("Context ID is blank");
                                 continue;
                             }
                             else if (String.IsNullOrEmpty(newDescription))
                             {
-                                System.Console.Out.WriteLine("New description is blank");
+                                WriteError("New description is blank");
                                 continue;
                             }
                             else if (context == null)
                             {
-                                System.Console.Out.WriteLine("Cannot find Context with ID: '" + id + "'");
+                                WriteError("Cannot find Context with ID: '" + id + "'");
                                 continue;
                             }
 
@@ -348,44 +348,44 @@ namespace StormshrikeTODO.CmdLine
                         }
                         catch
                         {
-                            System.Console.Out.WriteLine("Error changing Context: '" + cmd + "'");
+                            WriteError("Error changing Context: '" + cmd + "'");
                         }
                     }
                     else if (inputCmd == SHOW_OPEN_PROJECT_CMD)
                     {
                         if (_openProject != null)
                         {
-                            System.Console.Out.WriteLine(_openProject.ToString());
+                            WriteLine(_openProject.ToString());
                         }
                         else
                         {
-                            System.Console.Out.WriteLine("No open project");
+                            WriteError("No open project");
                         }
                     }
                     else if (inputCmd == SHOW_OPEN_TASK_CMD)
                     {
                         if (_openProject == null)
                         {
-                            System.Console.Out.WriteLine("No open project");
+                            WriteError("No open project");
                         }
                         else if (_openTask == null)
                         {
-                            System.Console.Out.WriteLine("No open task");
+                            WriteError("No open task");
                         }
                         else
                         {
-                            System.Console.Out.WriteLine(_openTask.ToString());
+                            WriteLine(_openTask.ToString());
                         }
                     }
                     else if (inputCmd == LIST_TASKS_CMD)
                     {
                         if (_openProject != null)
                         {
-                            _session.GetTaskList(_openProject.UniqueID).ForEach(t => System.Console.Out.WriteLine(t.ToString()));
+                            _session.GetTaskList(_openProject.UniqueID).ForEach(t => WriteLine(t.ToString()));
                         }
                         else
                         {
-                            System.Console.Out.WriteLine("No open project");
+                            WriteError("No open project");
                         }
                     }
                     else if (inputCmd.StartsWith(OPEN_TASK_CMD))
@@ -398,12 +398,12 @@ namespace StormshrikeTODO.CmdLine
     
                             if ((_openTask = _openProject.GetTask(taskIdStr)) == null)
                             {
-                                System.Console.Out.WriteLine("Could not find Task ID: '" + taskIdStr + "'");
+                                WriteError("Could not find Task ID: '" + taskIdStr + "'");
                             }
                         }
                         else
                         {
-                            System.Console.Out.WriteLine("No open project");
+                            WriteError("No open project");
                         }
                     }
                     else if (inputCmd == LIST_CONTEXTS_CMD)
@@ -426,14 +426,14 @@ namespace StormshrikeTODO.CmdLine
                     else if (inputCmd == SAVE_CMD)
                     {
                         _session.Save();
-                        System.Console.Out.WriteLine(_session.ProjectCount.ToString() + " projects saved");
-                        System.Console.Out.WriteLine(_session.Contexts.Count.ToString() + " contexts saved");
+                        WriteInfo(_session.ProjectCount.ToString() + " projects saved");
+                        WriteInfo(_session.Contexts.Count.ToString() + " contexts saved");
                     }
                     else if (inputCmd.StartsWith(NEW_TASK_CMD))
                     {
                         if (_openProject == null)
                         {
-                            System.Console.Out.WriteLine("No open project!");
+                            WriteError("No open project!");
                         }
                         else
                         {
@@ -461,9 +461,9 @@ namespace StormshrikeTODO.CmdLine
     
                                 _openTask = task;
                             }
-                            catch (Exception e)
+                            catch (Exception ex)
                             {
-                                System.Console.Error.WriteLine("Error creating new task! '" + inputCmd + "': " + e.Message);
+                                WriteError("Error creating new task! '" + inputCmd, ex);
                             }
     
                         }
@@ -473,7 +473,7 @@ namespace StormshrikeTODO.CmdLine
                     {
                         if (_openProject == null)
                         {
-                            System.Console.Out.WriteLine("No open project!");
+                            WriteError("No open project!");
                         }
                         else
                         {
@@ -514,7 +514,7 @@ namespace StormshrikeTODO.CmdLine
                         var result = _session.LoadDefaultContexts();
                         if (!result)
                         {
-                            System.Console.Out.WriteLine("Could not load Default Contexts - Contexts already exist");
+                            WriteError("Could not load Default Contexts - Contexts already exist");
                         }
                     }
                     else if (inputCmd == "?" || inputCmd == "help")
@@ -528,13 +528,16 @@ namespace StormshrikeTODO.CmdLine
                     }
                     else
                     {
-                        System.Console.Out.WriteLine("Unknown Command! (Enter '?' or 'help' to see valid commands)");
+                        WriteError("Unknown Command! (Enter '?' or 'help' to see valid commands)");
                     }
                 }
                 catch (Exception e)
                 {
-                    System.Console.WriteLine("Error:" + e.Message);
-                    System.Console.WriteLine("     :" + e.InnerException.Message);
+                    WriteError("Error:" + e.Message, e);
+                    if (e.InnerException != null)
+                    {
+                        WriteError("InnerException" + e.InnerException.Message, e.InnerException);
+                    }
 
                 }
 
@@ -544,48 +547,78 @@ namespace StormshrikeTODO.CmdLine
             return 0;
         }
 
-        private static void ListCommands()
+        private void WriteInfo(String infomsg)
         {
-            System.Console.Out.WriteLine(LOAD_CMD);
-            System.Console.Out.WriteLine(SAVE_CMD);
-            System.Console.Out.WriteLine(EXIT_CMD);
-            System.Console.Out.WriteLine(LOAD_DEFAULT_CONTEXTS_CMD);
-            System.Console.Out.WriteLine(LIST_ALL_CMD);
-            System.Console.Out.WriteLine(LIST_PROJECTS_CMD);
-            System.Console.Out.WriteLine(LIST_CONTEXTS_CMD);
-            System.Console.Out.WriteLine(OPEN_PROJECT_CMD + "<ID>");
-            System.Console.Out.WriteLine(OPEN_TASK_CMD + "<ID>");
-            System.Console.Out.WriteLine(SHOW_OPEN_TASK_CMD);
-            System.Console.Out.WriteLine(SHOW_OPEN_PROJECT_CMD);
-            System.Console.Out.WriteLine(LIST_NEXT_TASKS_CMD);
-            System.Console.Out.WriteLine(LIST_NO_TASKS_CMD);
-            System.Console.Out.WriteLine(LIST_TASKS_CMD);
-            System.Console.Out.WriteLine(CLEAR_OPEN_PROJECT_CMD);
-            System.Console.Out.WriteLine(CLEAR_OPEN_TASK_CMD);
-            System.Console.Out.WriteLine(NEW_PROJECT_CMD + "<name>[,<due date>]");
-            System.Console.Out.WriteLine(NEW_TASK_CMD + "<name>[,<due date>[,detail]]");
-            System.Console.Out.WriteLine(DELETE_OPEN_PROJECT_CMD);
-            System.Console.Out.WriteLine(CHANGE_PRJ_DUE_DATE_CMD + "<due date>");
-            System.Console.Out.WriteLine(CHANGE_PRJ_NAME_CMD + "<name>");
-            System.Console.Out.WriteLine(CHANGE_TASK_STATUS_CMD + "<status>");
-            System.Console.Out.WriteLine(CHANGE_TASK_DETAILS_CMD + "<details>");
-            System.Console.Out.WriteLine(CHANGE_TASK_CONTEXT_CMD + " <ContextID>");
-            System.Console.Out.WriteLine(REMOVE_TASK_CONTEXT_CMD);
-            System.Console.Out.WriteLine(NEW_CONTEXT_CMD + "<description>");
-            System.Console.Out.WriteLine(REMOVE_CONTEXT_CMD + "<ContextID>");
-            System.Console.Out.WriteLine(CHANGE_CONTEXT_CMD + "<ContextID>,<new description>");
+            log.Info(infomsg);
+            WriteLine(infomsg);
+        }
+
+        private void WriteError(String errmsg)
+        {
+            log.Error(errmsg);
+            WriteLine(errmsg);
+
+        }
+
+        private void WriteError(String errmsg, Exception ex)
+        {
+            log.Error(errmsg);
+            WriteLine(errmsg);
+            log.Debug(errmsg, ex);
+        }
+
+        private void WriteLine(string msg)
+        {
+            System.Console.Out.WriteLine(msg);
+        }
+
+        private void Write(string msg)
+        {
+            System.Console.Out.Write(msg);
+        }
+
+        private void ListCommands()
+        {
+            WriteLine(LOAD_CMD);
+            WriteLine(SAVE_CMD);
+            WriteLine(EXIT_CMD);
+            WriteLine(LOAD_DEFAULT_CONTEXTS_CMD);
+            WriteLine(LIST_ALL_CMD);
+            WriteLine(LIST_PROJECTS_CMD);
+            WriteLine(LIST_CONTEXTS_CMD);
+            WriteLine(OPEN_PROJECT_CMD + "<ID>");
+            WriteLine(OPEN_TASK_CMD + "<ID>");
+            WriteLine(SHOW_OPEN_TASK_CMD);
+            WriteLine(SHOW_OPEN_PROJECT_CMD);
+            WriteLine(LIST_NEXT_TASKS_CMD);
+            WriteLine(LIST_NO_TASKS_CMD);
+            WriteLine(LIST_TASKS_CMD);
+            WriteLine(CLEAR_OPEN_PROJECT_CMD);
+            WriteLine(CLEAR_OPEN_TASK_CMD);
+            WriteLine(NEW_PROJECT_CMD + "<name>[,<due date>]");
+            WriteLine(NEW_TASK_CMD + "<name>[,<due date>[,detail]]");
+            WriteLine(DELETE_OPEN_PROJECT_CMD);
+            WriteLine(CHANGE_PRJ_DUE_DATE_CMD + "<due date>");
+            WriteLine(CHANGE_PRJ_NAME_CMD + "<name>");
+            WriteLine(CHANGE_TASK_STATUS_CMD + "<status>");
+            WriteLine(CHANGE_TASK_DETAILS_CMD + "<details>");
+            WriteLine(CHANGE_TASK_CONTEXT_CMD + " <ContextID>");
+            WriteLine(REMOVE_TASK_CONTEXT_CMD);
+            WriteLine(NEW_CONTEXT_CMD + "<description>");
+            WriteLine(REMOVE_CONTEXT_CMD + "<ContextID>");
+            WriteLine(CHANGE_CONTEXT_CMD + "<ContextID>,<new description>");
         }
 
         private void LoadProjects()
         {
             _session.LoadProjects();
-            System.Console.Out.WriteLine(_session.ProjectCount.ToString() + " projects loaded");
+            WriteInfo(_session.ProjectCount.ToString() + " projects loaded");
         }
 
         private void LoadContexts()
         {
             _session.LoadContexts();
-            System.Console.Out.WriteLine(_session.Contexts.Count.ToString() + " contexts loaded");
+            WriteInfo(_session.Contexts.Count.ToString() + " contexts loaded");
         }
 
         private void Load()
@@ -597,7 +630,7 @@ namespace StormshrikeTODO.CmdLine
         private void ListProjects()
         {
             int prjCount = _session.ProjectCount;
-            System.Console.Out.WriteLine("Project List...(" + prjCount + ")");
+            WriteInfo("Project List...(" + prjCount + ")");
             foreach (var prj in _session.ProjectEnumerable())
             {
                 PrintProject(prj);
@@ -607,7 +640,7 @@ namespace StormshrikeTODO.CmdLine
         private void ListContexts()
         {
             int ctxCount = _session.Contexts != null ? _session.Contexts.Count : 0;
-            System.Console.Out.WriteLine("Contexts List...(" + ctxCount + ")");
+            WriteInfo("Contexts List...(" + ctxCount + ")");
             if (ctxCount > 0)
             {
                 _session.Contexts.GetList().ForEach(ctx => PrintContext(ctx));
@@ -616,18 +649,18 @@ namespace StormshrikeTODO.CmdLine
 
         private void PrintContext(Context ctx)
         {
-            System.Console.Out.WriteLine(ctx.ToString() + " ID=" + ctx.ID);
+            WriteLine(ctx.ToString() + " ID=" + ctx.ID);
         }
 
         private void ListNextTask(Project prj)
         {
-            System.Console.Out.WriteLine(prj.ProjectName + ": " + prj.GetNextTask()?.Name);
+            WriteLine(prj.ProjectName + ": " + prj.GetNextTask()?.Name);
         }
 
         private void PrintProject(Project prj)
         {
-            System.Console.Out.WriteLine(prj.ToString());
-            prj.GetTaskList().OrderBy(t=>t.Order).ToList().ForEach(t => System.Console.Out.WriteLine("   " + t.ToString()));
+            WriteLine(prj.ToString());
+            prj.GetTaskList().OrderBy(t=>t.Order).ToList().ForEach(t => WriteLine("   " + t.ToString()));
         }
 
         private bool IsValidContext(string contextID)

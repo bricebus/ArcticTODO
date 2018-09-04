@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.CmdLine", "StormshrikeTODO.CmdLine\StormshrikeTODO.CmdLine.csproj", "{1623CCF3-F2CD-43ED-AF29-7B07C63E0B75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.Data.Tests", "StormshrikeTODO.Tests\StormshrikeTODO.Data.Tests.csproj", "{6A844F8A-FCAA-4A6A-97C2-8EF47769FF58}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.Data.Tests", "StormshrikeTODO.Data.Tests\StormshrikeTODO.Data.Tests.csproj", "{6A844F8A-FCAA-4A6A-97C2-8EF47769FF58}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StormshrikeTODO.Lib", "StormshrikeTODO.Lib\StormshrikeTODO.Lib.csproj", "{F0A4748A-8DEC-47E2-BE9F-83C80EC5390A}"
 EndProject

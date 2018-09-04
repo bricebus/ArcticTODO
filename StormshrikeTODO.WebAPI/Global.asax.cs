@@ -1,13 +1,7 @@
 ﻿using log4net;
 using log4net.Config;
-using Ninject;
-using StormshrikeTODO.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
-using System.Web.Routing;
 
 namespace StormshrikeTODO.WebAPI
 {
@@ -18,7 +12,16 @@ namespace StormshrikeTODO.WebAPI
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
 
+            StartLogging();
+        }
 
+        protected void Application_End()
+        {
+            log.Info("Stopping StormshrikeTODO.WebAPI");
+        }
+
+        private static void StartLogging()
+        {
             var loggingConfigFile = System.Environment.GetEnvironmentVariable("STORMSHRIKETODO_LOGGING_CONFIG_WEBAPI");
             if (String.IsNullOrEmpty(loggingConfigFile))
             {
@@ -41,11 +44,6 @@ namespace StormshrikeTODO.WebAPI
 
             XmlConfigurator.Configure(new System.IO.FileInfo(loggingConfigFile));
             log.Info("Starting StormshrikeTODO.WebAPI");
-        }
-
-        protected void Application_Stop()
-        {
-            log.Info("Stopping StormshrikeTODO.WebAPI");
         }
     }
 }
