@@ -148,10 +148,6 @@
       <Project>{F0A4748A-8DEC-47E2-BE9F-83C80EC5390A}</Project>
       <Name>StormshrikeTODO.Lib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StormshrikeTODO.CmdLine\StormshrikeTODO.CmdLine.csproj">
-      <Project>{1623ccf3-f2cd-43ed-af29-7b07c63e0b75}</Project>
-      <Name>StormshrikeTODO.CmdLine</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
