@@ -3,7 +3,7 @@ using Ninject;
 using StormshrikeTODO.Data;
 using StormshrikeTODO.Model;
 
-namespace StormshrikeTODO.WebAPI
+namespace StormshrikeTODO.WebAPI.App_Start
 {
     public class WebAPIBindings : NinjectModule
     {

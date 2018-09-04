@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace StormshrikeTODO.Tests.Persistence
+namespace StormshrikeTODO.Data.Tests
 {
     [TestClass]
     public class SQLItePersistenceTest

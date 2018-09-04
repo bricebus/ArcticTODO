@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StormshrikeTODO.Tests.Persistence
+namespace StormshrikeTODO.Data.Tests
 {
-    [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
+    [TestClass]
     public class XmlPersistenceTest
     {
 

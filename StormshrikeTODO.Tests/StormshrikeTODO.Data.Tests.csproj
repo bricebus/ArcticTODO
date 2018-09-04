@@ -60,9 +60,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Persistence\BinFilePersistenceTest.cs" />
-    <Compile Include="src\Persistence\SQLItePersistenceTest.cs" />
-    <Compile Include="src\Persistence\XmlPersistenceTest.cs" />
+    <Compile Include="src\BinFilePersistenceTest.cs" />
+    <Compile Include="src\SQLItePersistenceTest.cs" />
+    <Compile Include="src\XmlPersistenceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StormshrikeTODO.Data\StormshrikeTODO.Data.csproj">

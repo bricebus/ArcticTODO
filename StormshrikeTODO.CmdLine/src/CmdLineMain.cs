@@ -10,7 +10,7 @@ namespace StormshrikeTODO.CmdLine
 {
     public class CmdLineMain
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(CmdLineMain));
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private Session _session = null;
 

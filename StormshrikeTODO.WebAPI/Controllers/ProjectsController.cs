@@ -12,12 +12,6 @@ namespace StormshrikeTODO.WebAPI.Controllers
     public class ProjectsController : ApiController
     {
         private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        //private ProjectApi[] projects = new ProjectApi[]
-        //{
-        //    new ProjectApi("Test Project 1.1c", "8e2498a5-4f73-4378-a265-eeaa2610f28c"),
-        //    new ProjectApi("Test Project 2.1c", "d4d5f228-bf22-4501-ab8b-0f1d40f85569"),
-        //    new ProjectApi("Test Project 3.1c", "5988c4c8-2fca-4612-850c-203c45eccdeb"),
-        //};
 
         private IPersistence _persistence;
 

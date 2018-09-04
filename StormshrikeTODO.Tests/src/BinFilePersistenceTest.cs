@@ -5,7 +5,7 @@ using StormshrikeTODO.Model;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace StormshrikeTODO.Tests.Persistence
+namespace StormshrikeTODO.Data.Tests
 {
     [TestClass]
     public class BinFilePersistenceTest
